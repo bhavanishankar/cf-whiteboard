@@ -176,7 +176,7 @@ var app = {
     },
 
     modifyObject: function (data) {
-        var obj = util.getObjectById(data.args[0].uid);
+        var obj = util.getObjectById(data.args[0].uid, canvas);
         if (obj) {
             shapes[data.name].modifyAction.apply(this, data.args);
             app.canvas.setActiveObject(obj);
