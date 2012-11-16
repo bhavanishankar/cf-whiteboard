@@ -48,7 +48,7 @@ var app = {
     resize: function () {
         var docHeight = $(window).height();
         var docWidth = $(window).width();
-        $('.canvas-div').width(docWidth - 350);
+        $('.canvas-div').width(docWidth - ($('#chat-div').width()+$('.left-bar').width()+25));
         app.canvas.renderAll();
         app.setCanvas();
     },
@@ -72,7 +72,6 @@ var app = {
         $('#spinner').hide();
         $('#wait').hide();
         app.displayMessage('[*] open', app.sockjs.protocol);
-
     },
 
     onSocketMessage: function (e) {
@@ -132,7 +131,6 @@ var app = {
         }));
         app.inp.val('');
         $('#chat-div textarea').focus();
-
         return false;
     },
 

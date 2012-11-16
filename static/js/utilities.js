@@ -21,9 +21,9 @@ var util = {
 	 * @property id
 	 * @type object
 	 */
-	getObjectById:function (id, canvas) {
+	getObjectById:function (id, _canvas) {
 		var obj;
-		var objs = canvas.getObjects();
+		var objs = _canvas.getObjects();
 		objs.forEach(function (object) {
 			if (object.uid === id) {
 				obj = object;

@@ -54,7 +54,7 @@ var shapes = {
 			},
 			
 			modifyAction: function (args) {
-				var obj = util.getObjectById(args.uid);
+				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
 				updateProperties(obj, recvdObj);
 			}			
@@ -83,7 +83,7 @@ var shapes = {
 				storkeColor: '#f00'
 			},
 			modifyAction: function (args) {
-				var obj = util.getObjectById(args.uid);
+				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
 				updateProperties(obj, recvdObj);
 				obj.radius = recvdObj.width/2;
@@ -113,7 +113,7 @@ var shapes = {
 				storkeColor: '#000'
 			},
 			modifyAction: function (args) {
-				var obj = util.getObjectById(args.uid);
+				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
 				updateProperties(obj, recvdObj);					
 			}	
@@ -142,7 +142,7 @@ var shapes = {
 				strokeWidth: 3
 			},
 			modifyAction: function (args) {
-				var obj = util.getObjectById(args.uid);
+				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
 				updateProperties(obj, recvdObj);					
 			}
@@ -172,7 +172,7 @@ var shapes = {
 				left: 150
 			},
 			modifyAction: function (args) {
-				var obj = util.getObjectById(args.uid);
+				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
 				updateProperties(obj, recvdObj);					
 			}	
@@ -201,7 +201,7 @@ var shapes = {
 				left: 150
 			},
 			modifyAction: function (args) {
-				var obj = util.getObjectById(args.uid);
+				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
 				updateProperties(obj, recvdObj);					
 			}
@@ -230,7 +230,7 @@ var shapes = {
 				left: 150
 			},
 			modifyAction: function (args) {
-				var obj = util.getObjectById(args.uid);
+				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
 				updateProperties(obj, recvdObj);					
 			}
