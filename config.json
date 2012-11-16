@@ -1,0 +1,7 @@
+module.exports = {
+    fb: {
+        appId: '474497979238793'
+      , appSecret: '702662ef720a2ec4cf8719ed35c49d25'
+    }
+
+};
