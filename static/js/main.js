@@ -90,9 +90,6 @@ var app = {
     onSocketMessage: function (e) {
         var data = JSON.parse(e.data);
         switch (data.action) {
-            case 'newUser':
-                app.userJoined(data);
-                break;
             case 'text':
                 app.textMessage(data);
                 break;
@@ -129,14 +126,6 @@ var app = {
 
     textMessage: function (data) {
         app.displayMessage('<b>[ ' + data.userName + ' ]:</b> ', data.message);
-    },
-
-    userJoined: function (data) {
-    	 app.displayMessage('<b>[ ' + data.userName + ' ]:</b> joined', data.message);
-        /*if (!app.user_name.hasClass('newUser')) {
-            app.user_name.addClass('newUser');
-            $('#username').text(app.userName);
-          }*/
     },
 
     onTextSubmit: function () {
