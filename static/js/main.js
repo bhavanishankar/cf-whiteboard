@@ -1,6 +1,5 @@
 /**
  * main.js
- * Developer: Bhavani Shankar
  * About this : This is the main javascipt file to handle adding, editing, deleting all elements on canvas (text, rectangle, circle etc)
  * Uses 'Fabric.js' library for client side
  * Node.js and  Node Package Manager (NPM) for server side - JavaScript environment that uses an asynchronous event-driven model.
@@ -8,11 +7,8 @@
 var app = {
     sockjs_url: '/echo',
     sockjs: null,
-    div: $('#chat-div #chat-text'),
-    inp: $('#chat-div textarea'),
-    form: $('#chat-div form'),
-    user_name: $('.user-name'),
-    user_id: null,
+    chatDivElement: null,
+    chatInputElement: null,
     canvas: null,
     currentIcon: null,
     userName: 'Guest',
@@ -20,8 +16,9 @@ var app = {
     canvasHeight: 500,
 
     init: function () {
-        this.initShowPrompt();
-        this.sockjs = new SockJS(this.sockjs_url);
+    	  this.cacheDOMElements();
+		  this.sockjs = new SockJS(this.sockjs_url);        
+		  this.initShowPrompt();        
         $('#chat-div textarea').focus();
         this.canvas = new fabric.Canvas('canvas_area');
         this.iconClickHandler();
@@ -29,14 +26,24 @@ var app = {
         this.sockjs.onmessage = this.onSocketMessage;
         this.sockjs.onclose = this.onSocketClose;
         this.addObservers();
-        document.onkeydown = this.keyDown;
+        this.bindEvents();
         this.textAreaHandler();
-        $('.canvas-bg').bind('mousedown', this.mouseDown);
-        app.resize();
-        window.onresize = app.resize;
+        this.resize();
+        
     },
-
-    setCanvas: function () {
+    
+	 cacheDOMElements: function() {
+	 	this.chatDivElement =  $('#chat-div #chat-text');
+      this.chatInputElement =  $('#chat-div textarea');
+	 },
+	 
+	 bindEvents: function() {
+	 	 $(document).bind('keydown', app.keyDown);
+	 	 $(window).resize(app.resize);
+	 	 $('.canvas-bg').bind('mousedown', this.onCanvasMouseDown);
+	 },
+	 
+    prepareCanvas: function () {
         /* Need to set canvas dimensions when window is resized */
         app.canvas.setDimensions({
             width: app.canvasWidth,
@@ -46,14 +53,15 @@ var app = {
     },
 
     resize: function () {
-        var docHeight = $(window).height();
         var docWidth = $(window).width();
-        $('.canvas-div').width(docWidth - ($('#chat-div').width()+$('.left-bar').width()+25));
+        var chatDivWidth = $('#chat-div').outerWidth();
+        var toolBarWidth = $('.left-bar').outerWidth();
+        $('.canvas-div').width(docWidth - ( chatDivWidth + toolBarWidth ) - toolBarWidth/2);
         app.canvas.renderAll();
-        app.setCanvas();
+        app.prepareCanvas();
     },
 
-    mouseDown: function (event) {
+   onCanvasMouseDown: function (event) {
         if (app.iconSelected) {
             var scrollLeft = $('.canvas-bg').scrollLeft();
             var mouseX = event.pageX - app.canvasOffset.left + scrollLeft; // offset X
@@ -72,6 +80,11 @@ var app = {
         $('#spinner').hide();
         $('#wait').hide();
         app.displayMessage('[*] open', app.sockjs.protocol);
+        app.sockjs.send(JSON.stringify({
+	            action: 'text',
+	            message: 'Joined',
+	            userName: app.userName
+	        }));
     },
 
     onSocketMessage: function (e) {
@@ -96,6 +109,11 @@ var app = {
 
     onSocketClose: function () {
         app.displayMessage('[*] close', '');
+        app.sockjs.send(JSON.stringify({
+	            action: 'text',
+	            message: 'Left',
+	            userName: app.userName
+	        }));
     },
 
     createNewShape: function (data, include) {
@@ -114,30 +132,29 @@ var app = {
     },
 
     userJoined: function (data) {
-        if (!app.user_name.hasClass('newUser')) {
+    	 app.displayMessage('<b>[ ' + data.userName + ' ]:</b> joined', data.message);
+        /*if (!app.user_name.hasClass('newUser')) {
             app.user_name.addClass('newUser');
-            app.user_name.addClass(data.id);
             $('#username').text(app.userName);
-            app.user_id = data.id;
-        }
+          }*/
     },
 
-    onFormSubmit: function () {
-        app.displayMessage('<b>[' + app.userName + ' ]:</b> ', app.inp.val());
+    onTextSubmit: function () {
+        app.displayMessage('<b>[' + app.userName + ' ]:</b> ', app.chatInputElement.val());
         app.sockjs.send(JSON.stringify({
             action: 'text',
-            message: app.inp.val(),
+            message: app.chatInputElement.val(),
             userName: app.userName
         }));
-        app.inp.val('');
+        app.chatInputElement.val('');
         $('#chat-div textarea').focus();
         return false;
     },
 
     displayMessage: function (m, p) {
-        this.div.append(m + ' ' + p);
-        this.div.append($("<br>"));
-        this.div.scrollTop(this.div.scrollTop() + 10000);
+        this.chatDivElement.append(m + ' ' + p);
+        this.chatDivElement.append($("<br>"));
+        this.chatDivElement.scrollTop(this.chatDivElement.scrollTop() + 10000);
     },
 
     iconClickHandler: function () {
@@ -248,10 +265,10 @@ var app = {
                 // up arrow
                 app.moveObject('up');
             } else if (key === 39) {
-                // up arrow
+                // right arrow
                 app.moveObject('right');
             } else if (key === 40) {
-                // up arrow
+                // down arrow
                 app.moveObject('down');
             }
         }
@@ -295,8 +312,8 @@ var app = {
                 event.stopPropagation();
 
             } else if (event.keyCode == 13) {
-                app.onFormSubmit();
-                $('#chat-div textarea').val('');
+                app.onTextSubmit();
+                chatInputElement.val('');
                 return false;
             }
         });
@@ -308,6 +325,8 @@ var app = {
                 app.userName = prompt("Please enter your name( 4 to 15 chars)");
             }
             while (app.userName == null || app.userName.length < 4 || app.userName.length > 15);
+            $('#username').text(app.userName);
+           
         }
         showPrompt();
     }

@@ -1,6 +1,5 @@
 /**
  * Shapes.js
- * Developer: Bhavani Shankar
  * About this : Defines all the shapes and its default values.
  *
  */

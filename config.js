@@ -1,3 +1,5 @@
-var config = {}
-config.port = process.env.VCAP_APP_PORT || 4000
+var config = {
+	port : process.env.VCAP_APP_PORT || 4000	
+}
+
 module.exports = config;

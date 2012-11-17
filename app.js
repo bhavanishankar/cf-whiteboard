@@ -44,15 +44,9 @@
 			/*Add him to the clients list*/
 			clients[conn.id] = conn;
 			
-			/*Broadcast that a new user had joined to existing clients*/
-			broadcast({
-				action: 'newUser', 
-				id: conn.id
-			});
-
 			/*Listen for data events on this client*/
 		   conn.on('data', function(data) {
-				onDataHandler(data)
+				onDataHandler(data, conn.id)
 		   });
 		};
 
@@ -66,10 +60,12 @@
 		/*To broadcast the data received from one client to all other active clients*/ 
 		function broadcast (message, includeSelf) {
 			for ( var index in clients ) {
-				var client = clients[index];
-				if (includeSelf || client.id != message.id){
-					client.write(JSON.stringify(message));
-				} 
+				if(clients.hasOwnProperty(index)) {
+					var client = clients[index];
+					if (includeSelf || client.id != message.id){
+						client.write(JSON.stringify(message));
+					} 
+				}
 			}
 		};
 	};
