@@ -3,32 +3,7 @@
  * About this : Defines all the shapes and its default values.
  *
  */
-var updateProperties = function (obj, recvdObj) {
 
-		obj.left = recvdObj.left;
-		obj.top = recvdObj.top;
-		obj.scaleX = recvdObj.scaleX;
-		obj.scaleY = recvdObj.scaleY;
-		obj.width = recvdObj.width;
-		obj.height = recvdObj.height;
-		obj.setAngle(recvdObj.angle);
-		if (recvdObj.fill) {
-			obj.set("fill", recvdObj.fill);
-		}
-		if (recvdObj.stroke) {
-			obj.set("stroke", recvdObj.stroke);
-		}
-		if (obj.text) {
-			obj.text = recvdObj.text;
-		}
-		if(recvdObj.path) {
-			obj.path = recvdObj.path;
-		}
-
-		if(obj.name === 'line') {
-			obj.scaleY = 1;
-		}
-	};
 var shapes = {
 		rectangle: {
 			toolAction: function(args) {
@@ -55,7 +30,7 @@ var shapes = {
 			modifyAction: function (args) {
 				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
-				updateProperties(obj, recvdObj);
+				shapes.updateProperties(obj, recvdObj);
 			}			
 		},
 		
@@ -84,7 +59,7 @@ var shapes = {
 			modifyAction: function (args) {
 				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
-				updateProperties(obj, recvdObj);
+				shapes.updateProperties(obj, recvdObj);
 				obj.radius = recvdObj.width/2;
 			}				
 		},
@@ -114,7 +89,7 @@ var shapes = {
 			modifyAction: function (args) {
 				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
-				updateProperties(obj, recvdObj);					
+				shapes.updateProperties(obj, recvdObj);					
 			}	
 		},
 		line: {
@@ -143,7 +118,7 @@ var shapes = {
 			modifyAction: function (args) {
 				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
-				updateProperties(obj, recvdObj);					
+				shapes.updateProperties(obj, recvdObj);					
 			}
 		},
 	
@@ -173,7 +148,7 @@ var shapes = {
 			modifyAction: function (args) {
 				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
-				updateProperties(obj, recvdObj);					
+				shapes.updateProperties(obj, recvdObj);					
 			}	
 			
 		},
@@ -202,7 +177,7 @@ var shapes = {
 			modifyAction: function (args) {
 				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
-				updateProperties(obj, recvdObj);					
+				shapes.updateProperties(obj, recvdObj);					
 			}
 		},
 		
@@ -231,10 +206,34 @@ var shapes = {
 			modifyAction: function (args) {
 				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
-				updateProperties(obj, recvdObj);					
+				shapes.updateProperties(obj, recvdObj);					
 			}
-		}
-		
-		
-		
+		},
+		updateProperties: function (obj, recvdObj) {
+			obj.left = recvdObj.left;
+			obj.top = recvdObj.top;
+			obj.scaleX = recvdObj.scaleX;
+			obj.scaleY = recvdObj.scaleY;
+			obj.width = recvdObj.width;
+			obj.height = recvdObj.height;
+			obj.setAngle(recvdObj.angle);
+			if (recvdObj.fill) {
+				obj.set("fill", recvdObj.fill);
+			}
+			if (recvdObj.stroke) {
+				obj.set("stroke", recvdObj.stroke);
+			}
+			if (obj.text) {
+				obj.text = recvdObj.text;
+			}
+			if(recvdObj.path) {
+				obj.path = recvdObj.path;
+			}
+	
+			if(obj.name === 'line') {
+				obj.scaleY = 1;
+			}
+		}	
+	
 }
+
