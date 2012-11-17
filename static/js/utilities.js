@@ -1,18 +1,23 @@
 
 var util = {
+	/**
+	 * Align the element in the center of the canvas div element
+	 * @property id
+	 * @type object
+	 */
 	centerSpinner:function() {
 	    // Add the jQuery center() method...
-	    jQuery.fn.center = function () {
+	    jQuery.fn.center = function (div) {
 	       this.css("position", "absolute");
-	       this.css("top", ($('.canvas-div').height() - this.height())/ 2 + $('.canvas-div').scrollTop() + "px");
-	       this.css("left", ($('.canvas-div').width() - this.width()) / 2 + $('.canvas-div').scrollLeft() + "px");
+	       this.css("top", (div.height() - this.height())/ 2 + div.scrollTop() + "px");
+	       this.css("left", (div.width() - this.width()) / 2 + div.scrollLeft() + "px");
 	       return this;
 	   }
 	},
 		
 	random_num:function ($value)  {
-		        var $result = Math.floor(Math.random() * $value);
-		        return $result;
+        var $result = Math.floor(Math.random() * $value);
+        return $result;
 	},   
 	
 	
