@@ -5,7 +5,7 @@ var util = {
 	 * @property id
 	 * @type object
 	 */
-	centerSpinner:function() {
+	centerSpinner:(function() {
 	    // Add the jQuery center() method...
 	    jQuery.fn.center = function (div) {
 	       this.css("position", "absolute");
@@ -13,13 +13,7 @@ var util = {
 	       this.css("left", (div.width() - this.width()) / 2 + div.scrollLeft() + "px");
 	       return this;
 	   }
-	},
-		
-	random_num:function ($value)  {
-        var $result = Math.floor(Math.random() * $value);
-        return $result;
-	},   
-	
+	})(),
 	
 	/**
 	 * Searches for the object with the given id and returns that object
@@ -60,10 +54,10 @@ var util = {
 	 * @param null
 	 */
 	
-	uniqid: function () {
+	getUniqId: function () {
 		var newDate = new Date();
 		return this.randomString() + newDate.getTime();
 	},
 
 }	
-util.centerSpinner();
+//util.centerSpinner();

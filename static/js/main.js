@@ -15,8 +15,8 @@ var app = {
     canvasHeight: 500,
 
     init: function () {
-    	  this.cacheDOMElements();
-		  this.initShowPrompt();        
+    	this.cacheDOMElements();
+		this.initShowPrompt();        
         this.setChatInputFocus();
         this.canvas = new fabric.Canvas('canvas_area');
         this.addObservers();
@@ -30,8 +30,8 @@ var app = {
 	},    
     
 	cacheDOMElements: function() {
-	 	this.chatDivElement =  $('#chat-div #chat-text');
-      this.chatInputElement =  $('#chat-div textarea');
+		this.chatDivElement =  $('#chat-div #chat-text');
+		this.chatInputElement =  $('#chat-div textarea');
 	},
 	 
 	prepareCanvas: function () {
@@ -86,7 +86,7 @@ var app = {
     },
 
     notifyNewShapeEvent: function (posObj) {
-        var uniqId = util.uniqid();
+        var uniqId = util.getUniqId();
         app.sockjs.send(JSON.stringify({
             action: 'new_shape',
             message: 'new',
@@ -201,7 +201,6 @@ var app = {
             }
             while (app.userName == null || app.userName.length < 4 || app.userName.length > 15);
             $('#username').text(app.userName);
-           
         }
         showPrompt();
     }

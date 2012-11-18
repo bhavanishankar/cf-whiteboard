@@ -1,6 +1,5 @@
 var eventHandler = {
-
-   
+  
 	bindEvents: function() {
 	 	 $(document).bind('keydown', this.onKeyDown);
 	 	 $(window).resize(app.resize);

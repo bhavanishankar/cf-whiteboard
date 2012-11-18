@@ -1,8 +1,8 @@
 var sockJSClient = {
 	  sockjs_url: '/echo',
 	  init: function() {
-	  	  app.sockjs = new SockJS(this.sockjs_url);
-	  	  app.sockjs.onopen = this.onSocketOpen;
+	  	app.sockjs = new SockJS(this.sockjs_url);
+	  	app.sockjs.onopen = this.onSocketOpen;
         app.sockjs.onmessage = this.onSocketMessage;
         app.sockjs.onclose = this.onSocketClose;
 	  },
@@ -29,9 +29,7 @@ var sockJSClient = {
                 break;
             case 'modified':
                 app.modifyObject(data);
-            default:
-                //
-                break;
+				break;
         }
     },
 
