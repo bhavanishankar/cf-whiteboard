@@ -25,6 +25,9 @@
 		/*List of incomming clients will be maintained in this map*/
 		var clients = {};
 
+		/*List of commands place here */
+		var clientData = [];
+		
 		/* Create sockjs server */	
 		var sockjs_echo = sockjs.createServer({
 			sockjs_url: "http://cdn.sockjs.org/sockjs-0.3.min.js", 
@@ -43,10 +46,16 @@
 		function onSockJSConnection(conn) {
 			/*Add him to the clients list*/
 			clients[conn.id] = conn;
-			
+			for ( var index in clientData ) {
+				if(clientData.hasOwnProperty(index)) {
+					conn.write(JSON.stringify(clientData[index]));
+				}
+			}
 			/*Listen for data events on this client*/
 		   conn.on('data', function(data) {
-				onDataHandler(data, conn.id)
+				onDataHandler(data, conn.id);
+				var dataObj = JSON.parse(data);
+				clientData.push(dataObj);
 		   });
 		};
 
