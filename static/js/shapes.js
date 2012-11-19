@@ -6,6 +6,7 @@
 
 var shapes = {
 		rectangle: {
+			name:'rectangle',
 			toolAction: function(args) {
 				var rect = new fabric.Rect({
 				  top: args.top,
@@ -30,11 +31,12 @@ var shapes = {
 			modifyAction: function (args) {
 				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
-				shapes.updateProperties(obj, recvdObj);
+				updateProperties(obj, recvdObj);
 			}			
 		},
 		
 		circle: {
+			name:'circle',
 			toolAction: function(args) {
 				var circle = new fabric.Circle({
 					radius: args.radius,
@@ -59,12 +61,13 @@ var shapes = {
 			modifyAction: function (args) {
 				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
-				shapes.updateProperties(obj, recvdObj);
+				updateProperties(obj, recvdObj);
 				obj.radius = recvdObj.width/2;
 			}				
 		},
 		
 		triangle: {
+			name:'triangle',
 			toolAction: function(args) {
 				var triangle = new fabric.Triangle({
 				width: args.width,
@@ -89,10 +92,11 @@ var shapes = {
 			modifyAction: function (args) {
 				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
-				shapes.updateProperties(obj, recvdObj);					
+				updateProperties(obj, recvdObj);					
 			}	
 		},
 		line: {
+			name:'line',
 			toolAction: function(args) {
 				var _line = new fabric.Line([0, 0, 300, 0],{
 				fill: args.fillColor,
@@ -118,11 +122,12 @@ var shapes = {
 			modifyAction: function (args) {
 				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
-				shapes.updateProperties(obj, recvdObj);					
+				updateProperties(obj, recvdObj);					
 			}
 		},
 	
 		arc: {
+			name:'arc',
 			toolAction: function(args) {
 				var _arc = new fabric.Path('M 0 100 a 100 100 0 1 1 200 0' ,
 				{ stroke: args.storkeColor, 
@@ -148,12 +153,13 @@ var shapes = {
 			modifyAction: function (args) {
 				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
-				shapes.updateProperties(obj, recvdObj);					
+				updateProperties(obj, recvdObj);					
 			}	
 			
 		},
 		
 		arrow: {
+			name:'arrow',
 			toolAction: function(args) {
 				var _arrow = new fabric.Path('M 0 10 L 50 10 L 50 0 L 70 20 L 50 40 L 50 30 L 0 30 z',
 				{
@@ -177,11 +183,12 @@ var shapes = {
 			modifyAction: function (args) {
 				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
-				shapes.updateProperties(obj, recvdObj);					
+				updateProperties(obj, recvdObj);					
 			}
 		},
 		
 		arrow_bidir: {
+			name:'arrow_bidir',
 			toolAction: function(args) {
 				var _arrow = new fabric.Path('M 0 20 L 10 0 L 10 10 L 30 10 L 30 0 L 40 20 L 30 40 L 30 30 L 10 30 L 10 40 z',
 				{
@@ -206,10 +213,13 @@ var shapes = {
 			modifyAction: function (args) {
 				var obj = util.getObjectById(args.uid, app.canvas);
 				var recvdObj = args.object;
-				shapes.updateProperties(obj, recvdObj);					
+				updateProperties(obj, recvdObj);					
 			}
 		},
-		updateProperties: function (obj, recvdObj) {
+		
+}
+
+var updateProperties = function (obj, recvdObj) {
 			obj.left = recvdObj.left;
 			obj.top = recvdObj.top;
 			obj.scaleX = recvdObj.scaleX;
@@ -235,5 +245,4 @@ var shapes = {
 			}
 		}	
 	
-}
 

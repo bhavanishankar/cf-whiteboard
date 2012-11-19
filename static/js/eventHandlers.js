@@ -70,7 +70,7 @@ var eventHandler = {
 
             } else if (event.keyCode == 13) {
                 app.onTextSubmit();
-                chatInputElement.val('');
+                app.chatInputElement.val('');
                 return false;
             }
         });

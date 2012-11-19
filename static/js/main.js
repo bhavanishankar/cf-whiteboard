@@ -15,18 +15,31 @@ var app = {
     canvasHeight: 500,
 
     init: function () {
-    	this.cacheDOMElements();
+    	this.addShapesToToolBar();
+		this.cacheDOMElements();
 		this.initShowPrompt();        
-        this.setChatInputFocus();
-        this.canvas = new fabric.Canvas('canvas_area');
-        this.addObservers();
-        eventHandler.bindEvents();
-        sockJSClient.init();
-        this.resize();
-        
+		this.setChatInputFocus();
+		this.canvas = new fabric.Canvas('canvas_area');
+		this.addObservers();
+		eventHandler.bindEvents();
+		sockJSClient.init();
+		this.resize();
    },
+   
+   addShapesToToolBar:function() {
+   	var toolbarShapesMarkup = '';
+   	for ( var shape in shapes ) {
+				if(shapes.hasOwnProperty(shape)) {
+					var _shape = shapes[shape].name;
+					var _shapeSource = "static/images/" + _shape + "_g.png"
+   				toolbarShapesMarkup += '<div class="shape_icon" id="' + _shape + '"><a href="#" rel="tooltip" title="' + _shape + '"><img alt="' + _shape + '" class="image_style"  src="' + _shapeSource + '" /></a></div><hr />';
+   			}
+   	}
+   	$('.left-bar').append(toolbarShapesMarkup);	
+   },
+   
 	setChatInputFocus: function() {
-		 $('#chat-div textarea').focus();
+		 this.chatInputElement.focus();
 	},    
     
 	cacheDOMElements: function() {
@@ -52,22 +65,22 @@ var app = {
         app.prepareCanvas();
    },
 
-    createNewShape: function (data, include) {
-        var args = [];
-        var argsObj = shapes[data.shape].defaultValues;
-        argsObj['left'] = data.position.x;
-        argsObj['top'] = data.position.y;
-        argsObj['uid'] = data.uid;
-        args.push(argsObj)
-        shapes[data.shape].toolAction.apply(this, args);
-        $("#freeow").hide();
-    },
+	createNewShape: function (data, include) {
+	  var args = [];
+	  var argsObj = shapes[data.shape].defaultValues;
+	  argsObj['left'] = data.position.x;
+	  argsObj['top'] = data.position.y;
+	  argsObj['uid'] = data.uid;
+	  args.push(argsObj)
+	  shapes[data.shape].toolAction.apply(this, args);
+	  $("#freeow").hide();
+   },
 
-    textMessage: function (data) {
+   textMessage: function (data) {
         app.displayMessage('<b>[ ' + data.userName + ' ]:</b> ', data.message);
-    },
+   },
 
-    onTextSubmit: function () {
+   onTextSubmit: function () {
         app.displayMessage('<b>[' + app.userName + ' ]:</b> ', app.chatInputElement.val());
         app.sockjs.send(JSON.stringify({
             action: 'text',
@@ -75,17 +88,17 @@ var app = {
             userName: app.userName
         }));
         app.chatInputElement.val('');
-        $('#chat-div textarea').focus();
+        this.setChatInputFocus();
         return false;
-    },
+   },
 
-    displayMessage: function (m, p) {
+   displayMessage: function (m, p) {
         this.chatDivElement.append(m + ' ' + p);
         this.chatDivElement.append($("<br>"));
         this.chatDivElement.scrollTop(this.chatDivElement.scrollTop() + 10000);
-    },
+   },
 
-    notifyNewShapeEvent: function (posObj) {
+   notifyNewShapeEvent: function (posObj) {
         var uniqId = util.getUniqId();
         app.sockjs.send(JSON.stringify({
             action: 'new_shape',
@@ -99,9 +112,9 @@ var app = {
         _data.uid = uniqId;
         _data.shape = app.shapeToDraw;
         app.createNewShape(_data, true);
-    },
+   },
 
-    modifyObject: function (data) {
+   modifyObject: function (data) {
         var obj = util.getObjectById(data.args[0].uid, app.canvas);
         if (obj) {
             shapes[data.name].modifyAction.apply(this, data.args);
@@ -109,9 +122,9 @@ var app = {
             obj.setCoords(); // without this object selection pointers remain at orginal postion(beofore modified)
         }
         app.canvas.renderAll();
-    },
+   },
 
-    addObservers: function () {
+   addObservers: function () {
         app.canvas.observe('object:modified', function (e) {
         	   var activeGroup = app.canvas.getActiveGroup();
             if (activeGroup) {
@@ -119,17 +132,17 @@ var app = {
                 var objectsInGroup = activeGroup.getObjects();
 	             objectsInGroup.forEach(function (object) {
 	             	 if(object.name === 'line') object.scaleY = 1;
-	                app.sockjs.send(app.getModifiedObject(object));
+	                app.sockjs.send(app.getModifiedShapeJSON(object));
 	            });
                return;
             }
             var obj = e.target;
             if(obj.name === 'line') obj.scaleY = 1;
-            app.sockjs.send(app.getModifiedObject(obj));
+            app.sockjs.send(app.getModifiedShapeJSON(obj));
         })
-    }, //end of addObservers
+   }, //end of addObservers
 
-    getModifiedObject: function (obj) {
+   getModifiedShapeJSON: function (obj) {
         var obj = JSON.stringify({
             action: "modified",
             name: obj.name,
@@ -139,7 +152,7 @@ var app = {
             }] // When sent only 'object' for some reason object  'uid' is not available to the receiver method.
         })
         return obj;
-    },
+   },
 
     deleteObjects: function () {
         var canvas = app.canvas;
@@ -188,7 +201,7 @@ var app = {
             }
             activeObject.setCoords();
             canvas.renderAll();
-            app.sockjs.send(app.getModifiedObject(activeObject));
+            app.sockjs.send(app.getModifiedShapeJSON(activeObject));
         } else {
             canvas.discardActiveGroup();
         }
