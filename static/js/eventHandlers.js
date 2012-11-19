@@ -65,6 +65,7 @@ var eventHandler = {
 
     textAreaHandler: function () {
         $('textarea').keydown(function (event) {
+            canvasObj.canvas.discardActiveObject();
             if (event.keyCode == 13 && event.shiftKey) {
                 event.stopPropagation();
 
@@ -74,6 +75,6 @@ var eventHandler = {
                 return false;
             }
         });
-    },
+    }
 
 }

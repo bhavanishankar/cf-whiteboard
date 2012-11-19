@@ -11,6 +11,6 @@ var toolBar = {
                 toolbarShapesMarkup += '<div class="shape_icon" id="' + _shape + '"><a href="#" rel="tooltip" title="' + _shape + '"><img alt="' + _shape + '" class="image_style"  src="' + _shapeSource + '" /></a></div><hr />';
             }
         }
-        $('.left-bar').append(toolbarShapesMarkup);
+        $('.tool-bar').append(toolbarShapesMarkup);
     }
 }

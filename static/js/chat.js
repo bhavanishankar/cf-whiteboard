@@ -9,8 +9,6 @@ var chat = {
 
     setChatInputFocus: function () {
         this.chatInputElement.focus();
-
-
     },
 
     cacheDOMElements: function () {
@@ -35,5 +33,4 @@ var chat = {
         this.setChatInputFocus();
         return false;
     }
-
 }

@@ -1,6 +1,6 @@
 /**
  * main.js
- * About this : This is the main javascipt file to handle adding, editing, deleting all elements on canvas (text, rectangle, circle etc)
+ * About this : This is the main javascript file to handle adding, editing, deleting all elements on canvas (text, rectangle, circle etc)
  * Uses 'Fabric.js' library for client side
  * Node.js and  Node Package Manager (NPM) for server side - JavaScript environment that uses an asynchronous event-driven model.
  */
@@ -18,17 +18,8 @@ var app = {
         this.initShowPrompt();
         eventHandler.bindEvents();
         sockJSClient.init();
-        this.initToolTip();
         canvasObj.init();
         chat.init();
-    },
-
-    initToolTip: function () {
-        $(function () {
-            $('[rel=tooltip]').tooltip({
-                placement: 'right'
-            });
-        });
     },
 
     createNewShape: function (data) {
