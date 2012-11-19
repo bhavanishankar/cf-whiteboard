@@ -66,19 +66,17 @@
       <script src="static/js/lib/fabric-all.js"></script>
       <script src="static/js/lib/jquery.freeow.min.js"></script>
       <script src="static/js/shapes.js"></script>
-      <script src="static/js/main.js"></script>
       <script type="text/javascript" src="static/js/utilities.js"></script>
 	  <script type="text/javascript" src="static/js/eventHandlers.js"></script>
 	  <script type="text/javascript" src="static/js/sockJSClient.js"></script>
+	  <script type="text/javascript" src="static/js/canvas.js"></script>
+	  <script type="text/javascript" src="static/js/toolBar.js"></script>
+	  <script type="text/javascript" src="static/js/chat.js"></script>
+	  <script src="static/js/main.js"></script>
       <script>
          $(document).ready(function() {
 	         app.init();
-	         $('#wait').hide();
-	         app.resize();
-	         $('#spinner').show().center($('.canvas-div'));
-	         $(function() {
-	         	$('[rel=tooltip]').tooltip({placement:'right'});
-         	});
+       
          })
       </script>
    </body>
