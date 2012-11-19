@@ -32,17 +32,17 @@ var canvasObj = {
         this.canvas.observe('object:modified', function (e) {
         	   var activeGroup = canvasObj.canvas.getActiveGroup();
             if (activeGroup) {
-            	 canvasObj.discardActiveGroup();
+            	 canvasObj.canvas.discardActiveGroup();
                 var objectsInGroup = activeGroup.getObjects();
 	             objectsInGroup.forEach(function (object) {
 	             	 if(object.name === 'line') object.scaleY = 1;
-	                app.sockjs.send(app.getModifiedShapeJSON(object));
+	                app.sockjs.send(app.getModifiedShapeJSON(object, "modified"));
 	            });
                return;
             }
             var obj = e.target;
             if(obj.name === 'line') obj.scaleY = 1;
-            app.sockjs.send(app.getModifiedShapeJSON(obj));
+            app.sockjs.send(app.getModifiedShapeJSON(obj, "modified"));
         })
    }, //end of addObservers
    
@@ -56,26 +56,29 @@ var canvasObj = {
         this.canvas.renderAll();
    },
    
-   deleteObjects: function () {
+   onDeletePress: function () {
         var activeObject = this.canvas.getActiveObject(),
             activeGroup = this.canvas.getActiveGroup();
         if (activeObject) {
             this.canvas.remove(activeObject);
-            /*matisse.comm.sendDrawMsg({
-              action: "delete",
-              args: [{
-                  uid: activeObject.uid
-              }]
-          });
-          $('#prop').remove();*/
+ 				app.sockjs.send(app.getModifiedShapeJSON(activeObject, "deleted"));
         } else if (activeGroup) {
             var objectsInGroup = activeGroup.getObjects();
             this.canvas.discardActiveGroup();
             objectsInGroup.forEach(function (object) {
-                app.canvas.remove(object);
+               canvasObj.canvas.remove(object);
+                app.sockjs.send(app.getModifiedShapeJSON(object, "deleted"));
             });
         }
     },
+
+	deleteObject: function(data) {
+		var obj = util.getObjectById(data.args[0].uid, this.canvas);
+		console.log(obj);
+      if (obj) {
+			this.canvas.remove(obj);
+		}
+	},    
     
     moveObject: function (direction) {
         var canvas = canvasObj.canvas;
@@ -133,6 +136,4 @@ var canvasObj = {
 				obj.scaleY = 1;
 			}
 		}	
-
-
 }

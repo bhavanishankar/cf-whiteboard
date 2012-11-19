@@ -29,15 +29,14 @@ var app = {
                 placement: 'right'
             });
         });
-
     },
 
     createNewShape: function (data) {
         var args = [];
         var argsObj = shapes[data.shape].defaultValues;
-        argsObj['left'] = data.position.x;
-        argsObj['top'] = data.position.y;
-        argsObj['uid'] = data.uid;
+        argsObj['left'] = data.positionObj.x;
+        argsObj['top'] = data.positionObj.y;
+        argsObj['uid'] = data.args[0].uid;
         args.push(argsObj)
         shapes[data.shape].toolAction.apply(this, args);
         $("#freeow").hide();
@@ -51,20 +50,22 @@ var app = {
         var uniqId = util.getUniqId();
         app.sockjs.send(JSON.stringify({
             action: 'new_shape',
-            position: posObj,
+            positionObj: posObj,
             shape: app.shapeToDraw,
-            uid: uniqId
+            args: [{
+            	uid: uniqId
+            }]
         }));
         var _data = {};
-        _data.position = posObj;
-        _data.uid = uniqId;
+        _data.positionObj = posObj;
+        _data.args = [{uid : uniqId }];
         _data.shape = app.shapeToDraw;
         app.createNewShape(_data);
     },
 
-    getModifiedShapeJSON: function (obj) {
+    getModifiedShapeJSON: function (obj, _action) {
         var obj = JSON.stringify({
-            action: "modified",
+            action: _action,
             name: obj.name,
             args: [{
                 uid: obj.uid,

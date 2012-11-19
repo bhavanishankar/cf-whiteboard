@@ -23,18 +23,21 @@ var sockJSClient = {
         switch (data.action) {
             case 'text':
                 app.textMessage(data);
-                break;
+            break;
             case 'new_shape':
                 app.createNewShape(data);
-                break;
+            break;
             case 'modified':
                 canvasObj.modifyObject(data);
-                break;
+            break;
+            case 'deleted':
+                canvasObj.deleteObject(data);
+            break;    
         }
     },
 
     onSocketClose: function () {
-        app.displayMessage('[*] close', '');
+        chat.displayMessage('[*] close', '');
         app.sockjs.send(JSON.stringify({
             action: 'text',
             message: 'Left',

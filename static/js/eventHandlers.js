@@ -26,22 +26,21 @@ var eventHandler = {
     onKeyDown: function (e) {
         var evt = (e) ? e : (window.event) ? window.event : null;
         if (evt) {
-            var canvas = canvasObj.canvas;
             var key = (evt.charCode) ? evt.charCode : ((evt.keyCode) ? evt.keyCode : ((evt.which) ? evt.which : 0));
             if (key === 46) { //  DELETE
-                canvas.deleteObjects();
+                canvasObj.onDeletePress();
             } else if (key === 37) {
                 //left arrow
-                canvas.moveObject('left');
+                canvasObj.moveObject('left');
             } else if (key === 38) {
                 // up arrow
-                canvas.moveObject('up');
+                canvasObj.moveObject('up');
             } else if (key === 39) {
                 // right arrow
-                canvas.moveObject('right');
+                canvasObj.moveObject('right');
             } else if (key === 40) {
                 // down arrow
-                canvas.moveObject('down');
+                canvasObj.moveObject('down');
             }
         }
 
