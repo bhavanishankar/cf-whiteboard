@@ -6,7 +6,7 @@ var sockJSServer = {
         var clients = {};
 
         /*List of commands place here */
-        var clientData = [];
+        var clientData = {};
 
         /* Create sockjs server */
         var sockjs_echo = sockjs.createServer({
@@ -28,14 +28,47 @@ var sockJSServer = {
             clients[conn.id] = conn;
             for (var index in clientData) {
                 if (clientData.hasOwnProperty(index)) {
-                    conn.write(JSON.stringify(clientData[index]));
+                    if(clientData[index].action === 'new_shape' ) {
+                        conn.write(JSON.stringify(clientData[index]));
+                    }
+                    if(clientData[index].modify)  {
+                        for(var action in clientData[index].modify)   {
+                             conn.write(JSON.stringify(clientData[index].modify[action]));
+                        }
+                    }
+                    if(clientData.textObj)  {
+                        console.log('text obj')
+                        for(var action in clientData.textObj)   {
+                            conn.write(JSON.stringify(clientData.textObj[action]));
+                        }
+                    }
                 }
             }
             /*Listen for data events on this client*/
             conn.on('data', function (data) {
                 onDataHandler(data, conn.id);
                 var dataObj = JSON.parse(data);
-                clientData.push(dataObj);
+                if(dataObj.action !== 'text') {
+                    switch(dataObj.action)  {
+                        case 'new_shape':
+                           clientData[dataObj.args[0].uid] = dataObj;
+                        break;
+                        case 'modified':
+                            if(clientData[dataObj.args[0].uid]!== undefined  && clientData[dataObj.args[0].uid].modify === undefined) {
+                                clientData[dataObj.args[0].uid].modify = {};
+                            }
+                            clientData[dataObj.args[0].uid].modify[dataObj.args[0].uid]= dataObj;
+                        break;
+                        case 'deleted':
+                            delete clientData[dataObj.args[0].uid];
+                        break;
+
+                    }
+                }  else {
+                    if(clientData.textObj === undefined) clientData.textObj = [];
+                    clientData.textObj.push(dataObj);
+                }
+
             });
         };
 
