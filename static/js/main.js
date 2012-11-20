@@ -12,6 +12,8 @@ var app = {
     userName: 'Guest',
 
     init: function () {
+        /* Prevent from closing SockJS connection when ESC key is pressed*/
+        window.addEventListener('keydown', function(e) { (e.keyCode == 27 && e.preventDefault()) })
         $('#wait').hide();
         $('#spinner').show().center($('.canvas-div'));
         toolBar.addShapes();
