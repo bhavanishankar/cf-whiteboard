@@ -2,10 +2,11 @@ var toolBar = {
     shapeSelected: null,
     currentShape: null,
 
-    addShapes: function () {
+    initToolbar: function () {
         $(".tool-bar-holder").toolbar(
             {
               shapes:shapes,
+              imagesPath:'/static/images/',
               dropElement:$('.canvas-div'),
               height:'500px',
               shapeSelected:this.onShapeSelect,
@@ -15,6 +16,7 @@ var toolBar = {
     },
 
     onShapeSelect:function(event) {
+        app.shapeToDraw = event.shapeSelected;
         toolBar.shapeSelected = true;
     },
 
