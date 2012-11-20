@@ -16,7 +16,7 @@ var app = {
         window.addEventListener('keydown', function(e) { (e.keyCode == 27 && e.preventDefault()) })
         $('#wait').hide();
         $('#spinner').show().center($('.canvas-div'));
-        toolBar.addShapes();
+        toolBar.initToolbar();
         this.initShowPrompt();
         eventHandler.bindEvents();
         sockJSClient.init();
