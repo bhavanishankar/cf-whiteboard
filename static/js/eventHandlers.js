@@ -8,20 +8,6 @@ var eventHandler = {
         this.textAreaHandler();
     },
 
-    onCanvasMouseDown: function (event) {
-        if (toolBar.shapeSelected) {
-            var scrollLeft = $('.canvas-bg').scrollLeft();
-            var mouseX = event.pageX - canvasObj.canvasOffset.left + scrollLeft; // offset X
-            var mouseY = event.pageY - canvasObj.canvasOffset.top; // offset Y
-            app.notifyNewShapeEvent({
-                x: mouseX,
-                y: mouseY
-            });
-            toolBar.shapeSelected = false;
-            toolBar.currentShape.removeClass('icon_selected');
-            toolBar.currentShape = null;
-        }
-    },
 
     onKeyDown: function (e) {
         var evt = (e) ? e : (window.event) ? window.event : null;
@@ -48,7 +34,7 @@ var eventHandler = {
 
     iconClickHandler: function () {
         $('.shape_icon').on('click', function () {
-            if (toolBar.currentShape) {
+           /* if (toolBar.currentShape) {
                 toolBar.currentShape.removeClass('icon_selected');
             }
             $('#freeow').show();
@@ -57,7 +43,7 @@ var eventHandler = {
             $("#freeow").freeow("", "Now click on canvas to add a new shape", {
                 classes: ["gray"],
                 prepend: false
-            });
+            });                        */
             app.shapeToDraw = $(this).attr('id');
             toolBar.shapeSelected = true;
         })
