@@ -6,6 +6,7 @@
 var shapes = {
     rectangle: {
         name: 'rectangle',
+        iconName:'rectangle_g.png',
         toolAction: function (args) {
             var rect = new fabric.Rect({
                 top: args.top,
@@ -36,6 +37,7 @@ var shapes = {
 
     circle: {
         name: 'circle',
+        iconName:'circle_g.png',
         toolAction: function (args) {
             var circle = new fabric.Circle({
                 radius: args.radius,
@@ -67,6 +69,7 @@ var shapes = {
 
     triangle: {
         name: 'triangle',
+        iconName:'triangle_g.png',
         toolAction: function (args) {
             var triangle = new fabric.Triangle({
                 width: args.width,
@@ -96,6 +99,7 @@ var shapes = {
     },
     line: {
         name: 'line',
+        iconName:'line_g.png',
         toolAction: function (args) {
             var _line = new fabric.Line([0, 0, 300, 0], {
                 fill: args.fillColor,
@@ -127,6 +131,7 @@ var shapes = {
 
     arc: {
         name: 'arc',
+        iconName:'arc_g.png',
         toolAction: function (args) {
             var _arc = new fabric.Path('M 0 100 a 100 100 0 1 1 200 0', {
                 stroke: args.storkeColor,
@@ -159,6 +164,7 @@ var shapes = {
 
     arrow: {
         name: 'arrow',
+        iconName:'arrow_g.png',
         toolAction: function (args) {
             var _arrow = new fabric.Path('M 0 10 L 50 10 L 50 0 L 70 20 L 50 40 L 50 30 L 0 30 z', {
                 left: args.left,
@@ -190,6 +196,7 @@ var shapes = {
 
     arrow_bidir: {
         name: 'arrow_bidir',
+        iconName:'arrow_bidir_g.png',
         toolAction: function (args) {
             var _arrow = new fabric.Path('M 0 20 L 10 0 L 10 10 L 30 10 L 30 0 L 40 20 L 30 40 L 30 30 L 10 30 L 10 40 z', {
                 left: args.left,
