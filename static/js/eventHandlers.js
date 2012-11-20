@@ -4,7 +4,6 @@ var eventHandler = {
         $(document).bind('keydown', this.onKeyDown);
         $(window).resize(app.resize);
         $('.canvas-bg').bind('mousedown', this.onCanvasMouseDown);
-        this.iconClickHandler();
         this.textAreaHandler();
     },
 
@@ -32,22 +31,6 @@ var eventHandler = {
 
     },
 
-    iconClickHandler: function () {
-        $('.shape_icon').on('click', function () {
-           /* if (toolBar.currentShape) {
-                toolBar.currentShape.removeClass('icon_selected');
-            }
-            $('#freeow').show();
-            toolBar.currentShape = $(this);
-            toolBar.currentShape.addClass('icon_selected');
-            $("#freeow").freeow("", "Now click on canvas to add a new shape", {
-                classes: ["gray"],
-                prepend: false
-            });                        */
-            app.shapeToDraw = $(this).attr('id');
-            toolBar.shapeSelected = true;
-        })
-    },
 
     textAreaHandler: function () {
         $('textarea').keydown(function (event) {
