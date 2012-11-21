@@ -30,7 +30,7 @@ var canvasObj = {
 
    addObservers: function () {
         this.canvas.observe('object:modified', function (e) {
-        	   var activeGroup = canvasObj.canvas.getActiveGroup();
+        	var activeGroup = canvasObj.canvas.getActiveGroup();
             if (activeGroup) {
             	 canvasObj.canvas.discardActiveGroup();
                 var objectsInGroup = activeGroup.getObjects();
@@ -61,7 +61,7 @@ var canvasObj = {
             activeGroup = this.canvas.getActiveGroup();
         if (activeObject) {
             this.canvas.remove(activeObject);
- 				app.sockjs.send(app.getModifiedShapeJSON(activeObject, "deleted"));
+ 			app.sockjs.send(app.getModifiedShapeJSON(activeObject, "deleted"));
         } else if (activeGroup) {
             var objectsInGroup = activeGroup.getObjects();
             this.canvas.discardActiveGroup();
@@ -73,8 +73,7 @@ var canvasObj = {
     },
 
 	deleteObject: function(data) {
-		var obj = util.getObjectById(data.args[0].uid, this.canvas);
-		console.log(obj);
+      var obj = util.getObjectById(data.args[0].uid, this.canvas);
       if (obj) {
 			this.canvas.remove(obj);
 		}
@@ -136,4 +135,4 @@ var canvasObj = {
 				obj.scaleY = 1;
 			}
 		}	
-}
+};
