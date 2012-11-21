@@ -47,20 +47,22 @@ var sockJSServer = {
             /*Listen for data events on this client*/
             conn.on('data', function (data) {
                 onDataHandler(data, conn.id);
+                /* Push the data received from client*/
                 var dataObj = JSON.parse(data);
                 if(dataObj.action !== 'text') {
+                    var shapeId = dataObj.args[0].uid;
                     switch(dataObj.action)  {
                         case 'new_shape':
-                           clientData[dataObj.args[0].uid] = dataObj;
+                           clientData[shapeId] = dataObj;
                         break;
                         case 'modified':
-                            if(clientData[dataObj.args[0].uid]!== undefined  && clientData[dataObj.args[0].uid].modify === undefined) {
-                                clientData[dataObj.args[0].uid].modify = {};
+                            if(clientData[shapeId]!== undefined  && clientData[shapeId].modify === undefined) {
+                                clientData[shapeId].modify = {};
                             }
-                            clientData[dataObj.args[0].uid].modify[dataObj.args[0].uid]= dataObj;
+                            clientData[shapeId].modify[shapeId]= dataObj;
                         break;
                         case 'deleted':
-                            delete clientData[dataObj.args[0].uid];
+                            delete clientData[shapeId];
                         break;
 
                     }
