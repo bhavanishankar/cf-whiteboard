@@ -29,10 +29,10 @@ var sockJSClient = {
                 whiteboardApp.createNewShape(data);
             break;
             case 'modified':
-                whiteboardApp.canvas.modifyObject(data);
+                whiteboardApp.canvasWidget.data('canvas').modifyObject(data);
             break;
             case 'deleted':
-                whiteboardApp.canvas.deleteObject(data);
+                whiteboardApp.canvasWidget.data('canvas').deleteObject(data);
             break;    
         }
     },
@@ -46,4 +46,4 @@ var sockJSClient = {
         }));
     }
 
-}
+};
