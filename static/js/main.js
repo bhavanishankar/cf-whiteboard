@@ -52,11 +52,17 @@ var whiteboardApp = {
         whiteboardApp.canvasWidget = $("#canvas-holder").canvas(
             {
                 title: "Canvas",
-                fabric: fabric
+                fabric: fabric,
+                shapeModified: this.onShapeModify,
+                applyModify: this.onApplyModify,
+                shapeDeleted: this.onShapeDelete
             } );
         whiteboardApp.canvas = whiteboardApp.canvasWidget.data('canvas').getCanvasInstance();
     },
 
+    onApplyModify: function(event, data) {
+        whiteboardApp.shapes[data.name].modifyAction.apply(this, data.args);
+    },
 
     onShapeSelect:function(event) {
         whiteboardApp.shapeToDraw = event.shapeSelected;
@@ -123,13 +129,21 @@ var whiteboardApp = {
         whiteboardApp.createNewShape(_data);
     },
 
-    getModifiedShapeJSON: function (obj, _action) {
+    onShapeModify:function(event, data) {
+        whiteboardApp.sockJS.send(whiteboardApp.getModifiedShapeJSON(data, "modified"));
+    },
+
+    onShapeDelete:function(event, data) {
+        whiteboardApp.sockJS.send(whiteboardApp.getModifiedShapeJSON(data, "deleted"));
+    },
+
+    getModifiedShapeJSON: function (shape, _action) {
         var _obj = JSON.stringify({
             action: _action,
-            name: obj.name,
+            name: shape.name,
             args: [{
-                uid: obj.uid,
-                object: obj
+                uid: shape.uid,
+                object: shape
             }] // When sent only 'object' for some reason object 'uid' is not available to the receiver method.
         });
         return _obj;
