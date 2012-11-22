@@ -4,8 +4,8 @@
  * Uses 'Fabric.js' library for client side
  * Node.js and  Node Package Manager (NPM) for server side - JavaScript environment that uses an asynchronous event-driven model.
  */
-var app = {
-    sockjs: null,
+var whiteboardApp = {
+    sockJS: null,
     chatDivElement: null,
     chatInputElement: null,
     currentIcon: null,
@@ -13,70 +13,159 @@ var app = {
 
     init: function () {
         /* Prevent from closing SockJS connection when ESC key is pressed*/
-        window.addEventListener('keydown', function(e) { (e.keyCode == 27 && e.preventDefault()) })
+        window.addEventListener('keydown', function(e) { (e.keyCode === 27 && e.preventDefault()) })
         $('#wait').hide();
         $('#spinner').show().center($('.canvas-div'));
-        toolBar.initToolbar();
+        this.initCanvas();
+        this.initToolbar();
+        this.initChatWindow();
         this.initShowPrompt();
-        eventHandler.bindEvents();
         sockJSClient.init();
-        canvasObj.init();
-        chat.init();
+        $(document).bind('keydown', this.onKeyDown);
+        $(window).resize(whiteboardApp.resize);
+    },
+
+    initToolbar: function () {
+        var tb = $("#shapesToolbar").toolbar(
+            {
+                shapes:whiteboardApp.shapes, // shapes object with shape 'name' and 'iconname' ex: shapes = {  rectangle: {  name: 'rectangle', imagesPath:'/static/images/' } }
+                dropTarget:$('.canvas-div'),
+                title:'Shapes',
+                shapeSelected:this.onShapeSelect,  // callback
+                dropTargetClicked:this.onClickDropTarget   //callback
+            }
+        );
+        /* syntax for calling public method */
+        /* $(".tool-bar-holder").data('toolbar').publicMethod();*/
+
+    },
+
+    initChatWindow: function() {
+        whiteboardApp.chat = $(".chat-div").chatwindow(
+            {
+                title: "Chat",
+                textSubmitted:this.onTextSubmit
+            } );
+    },
+
+    initCanvas:function() {
+        whiteboardApp.canvasWidget = $("#canvas-holder").canvas(
+            {
+                title: "Canvas",
+                fabric: fabric
+            } );
+        whiteboardApp.canvas = whiteboardApp.canvasWidget.data('canvas').getCanvasInstance();
+    },
+
+
+    onShapeSelect:function(event) {
+        whiteboardApp.shapeToDraw = event.shapeSelected;
+        whiteboardApp.shapeSelected = true;
+        $('#freeow').show();
+    },
+
+    onClickDropTarget:function(event) {
+        if (whiteboardApp.shapeSelected) {
+            var scrollLeft = $('.canvas-bg').scrollLeft(),
+                mouseX = event.pageX - $('.canvas-div').offset().left + scrollLeft, // offset X
+                mouseY = event.pageY - $('.canvas-div').offset().top; // offset Y
+            whiteboardApp.notifyNewShapeEvent({
+                x: mouseX,
+                y: mouseY
+            });
+            whiteboardApp.shapeSelected = false;
+        }
+    },
+
+    onTextSubmit: function (event) {
+        whiteboardApp.chat.data('chatwindow').displayMessage('<b>[ ' + whiteboardApp.userName + ' ]:</b> ', $(event.currentTarget).val());
+        whiteboardApp.sockJS.send(JSON.stringify({
+            action: 'text',
+            message: $(event.currentTarget).val(),
+            userName: whiteboardApp.userName
+        }));
+        $(event.currentTarget).val('');
+        $(event.currentTarget).focus();
+        return false;
     },
 
     createNewShape: function (data) {
-        var args = [];
-        var argsObj = shapes[data.shape].defaultValues;
-        argsObj['left'] = data.positionObj.x;
-        argsObj['top'] = data.positionObj.y;
-        argsObj['uid'] = data.args[0].uid;
-        args.push(argsObj)
-        shapes[data.shape].toolAction.apply(this, args);
+        var args = [],
+            argsObj = whiteboardApp.shapes[data.shape].defaultValues;
+        argsObj.left = data.positionObj.x;
+        argsObj.top = data.positionObj.y;
+        argsObj.uid = data.args[0].uid;
+        args.push(argsObj);
+        whiteboardApp.shapes[data.shape].toolAction.apply(this, args);
         $("#freeow").hide();
     },
 
     textMessage: function (data) {
-        chat.displayMessage('<b>[ ' + data.userName + ' ]:</b> ', data.message);
+        whiteboardApp.chat.data('chatwindow').displayMessage('<b>[ ' + data.userName + ' ]:</b> ', data.message);
     },
 
     notifyNewShapeEvent: function (posObj) {
-        var uniqId = util.getUniqId();
-        app.sockjs.send(JSON.stringify({
+        var uniqId = util.getUniqId(),
+            _data = {};
+        whiteboardApp.sockJS.send(JSON.stringify({
             action: 'new_shape',
             positionObj: posObj,
-            shape: app.shapeToDraw,
-            args: [{
+            shape: whiteboardApp.shapeToDraw,
+            args: [
+                {
             	uid: uniqId
-            }]
+                }
+            ]
         }));
-        var _data = {};
         _data.positionObj = posObj;
         _data.args = [{uid : uniqId }];
-        _data.shape = app.shapeToDraw;
-        app.createNewShape(_data);
+        _data.shape = whiteboardApp.shapeToDraw;
+        whiteboardApp.createNewShape(_data);
     },
 
     getModifiedShapeJSON: function (obj, _action) {
-        var obj = JSON.stringify({
+        var _obj = JSON.stringify({
             action: _action,
             name: obj.name,
             args: [{
                 uid: obj.uid,
                 object: obj
             }] // When sent only 'object' for some reason object 'uid' is not available to the receiver method.
-        })
-        return obj;
+        });
+        return _obj;
     },
 
     initShowPrompt: function () {
         window.showPrompt = function () {
             do {
-                app.userName = prompt("Please enter your name( 4 to 15 chars)");
+                whiteboardApp.userName = prompt("Please enter your name( 4 to 15 chars)");
             }
-            while (app.userName == null || app.userName.length < 4 || app.userName.length > 15);
-            $('#username').text(app.userName);
+            while (whiteboardApp.userName === null || whiteboardApp.userName.length < 4 || whiteboardApp.userName.length > 15);
+            $('#username').text(whiteboardApp.userName);
+        };
+        window.showPrompt();
+    },
+
+    onKeyDown: function (e) {
+        var evt = (e) ? e : (window.event) ? window.event : null;
+        if (evt) {
+            var key = (evt.charCode) ? evt.charCode : ((evt.keyCode) ? evt.keyCode : ((evt.which) ? evt.which : 0));
+            if (key === 46) { //  DELETE
+                whiteboardApp.canvasWidget.data('canvas').onDeletePress();
+            } else if (key === 37) {
+                //left arrow
+                whiteboardApp.canvasWidget.data('canvas').moveObject('left');
+            } else if (key === 38) {
+                // up arrow
+                whiteboardApp.canvasWidget.data('canvas').moveObject('up');
+            } else if (key === 39) {
+                // right arrow
+                whiteboardApp.canvasWidget.data('canvas').moveObject('right');
+            } else if (key === 40) {
+                // down arrow
+                whiteboardApp.canvasWidget.data('canvas').moveObject('down');
+            }
         }
-        showPrompt();
     }
 
-} //end of app				
+}; //end of app
