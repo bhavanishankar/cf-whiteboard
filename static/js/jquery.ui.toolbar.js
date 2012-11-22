@@ -1,60 +1,77 @@
-(function($) {
+(function ($) {
 
     $.widget("ui.toolbar", {
-        options: {
-            color: "#fff",
-            backgroundColor: "#000"
+
+        // set default options
+        options:{
+            title:"Shapes"
         },
 
-        _create: function() {
+        // initialize the plugin
+        _create:function () {
             var self = this,
-                o = self.options,
-                el = self.element,
-                toolbar = $(el).append('<div class="tool-bar"><div class="box-title">Tools</div>' + this.getShapesMarkup(o.imagesPath,o.shapes) + '</div>');
+                _options = self.options,
+                _element = self.element,
+                _titleDiv = $('<div>').addClass('box-title')
+                                      .append(_options.title);
 
-            $('.shape_icon').live('click', function(event) {
-                if (toolbar.currentShape) {
-                    toolbar.currentShape.removeClass('icon_selected');
+            _element.addClass('ui-toolbar')
+                    .append(_titleDiv);
+
+            this._addShapes(_element, _options.shapes);
+
+            $('.shape').on('click', function (event) {
+                self._onShapeClicked(event);
+            });
+
+            _options.dropTarget.click(function (e) {
+                if (_element.currentShape) {
+                    self._trigger('dropTargetClicked', e);
+                    _element.currentShape.removeClass('selected');
                 }
-                $('#freeow').show();
-                toolbar.currentShape = $(this);
-                toolbar.currentShape.addClass('icon_selected');
-                event.shapeSelected =  $(this).attr('id');
-                self._trigger('shapeSelected', event);
+            });
 
-            });
-            o.dropElement.click(function (e) {
-               if (toolbar.currentShape) {
-                   self._trigger('dropElementClicked', e);
-                   toolbar.currentShape.removeClass('icon_selected');
-               }
-            });
-            this.option( this.options );
+            this.option(this.options);
         },
 
-        getShapesMarkup:function(imagesPath, shapes) {
-            var toolbarShapesMarkup = '';
+        _onShapeClicked: function(event) {
+            var _element = this.element;
+
+            if (_element.currentShape) {
+                (_element.currentShape).removeClass('selected');
+            }
+
+            _element.currentShape = $(event.currentTarget);
+            _element.currentShape.addClass('selected');
+
+            event.shapeSelected =  $(_element.currentShape).attr('id');
+            this._trigger('shapeSelected', event);
+        },
+
+        _addShapes:function (_element, shapes) {
             for (var index in shapes) {
                 if (shapes.hasOwnProperty(index)) {
-                    var _shape = shapes[index].name;
-                    var _shapeSource =  imagesPath + shapes[index].iconName;
-                    toolbarShapesMarkup += '<div class="shape_icon" id="' + _shape + '"><a href="#" rel="tooltip" title="' + _shape + '"><img alt="' + _shape + '" class="image_style"  src="' + _shapeSource + '" /></a></div><hr />';
+                    var _shapeId = shapes[index].name,
+                        _shape = $('<div>').addClass(_shapeId)
+                            .addClass('shape')
+                            .attr('id', _shapeId);
+                    _element.append(_shape);
                 }
             }
-            return toolbarShapesMarkup;
         },
 
-        removeShapeSelection: function() {
-            toolbar.currentShape.removeClass('icon_selected');
+        /*TODO need to update with correct statements*/
+        destroy:function () {
+            this.element.removeClass('ui-toolbar')
+                .remove();
         },
 
-        destroy: function() {
-            this.element.next().remove();
-        },
-
-        _setOption: function(option, value) {
-            $.Widget.prototype._setOption.apply( this, arguments );
+        _setOption:function (option, value) {
+            $.Widget.prototype._setOption.apply(this, arguments);
             var el = this.element;
-         }
+            if (option === "title") {
+                $(el).css(option, value);
+            }
+        }
     });
 })(jQuery);
