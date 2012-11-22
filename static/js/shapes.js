@@ -3,7 +3,7 @@
  * About this : Defines all the shapes and its default values.
  *
  */
-var shapes = {
+whiteboardApp.shapes = {
     rectangle: {
         name: 'rectangle',
         iconName:'rectangle_g.png',
@@ -17,7 +17,7 @@ var shapes = {
             });
             rect.name = "rectangle";
             rect.uid = args.uid;
-            canvasObj.canvas.add(rect);
+            whiteboardApp.canvas.add(rect);
         },
 
         defaultValues: {
@@ -29,9 +29,9 @@ var shapes = {
         },
 
         modifyAction: function (args) {
-            var obj = util.getObjectById(args.uid, canvasObj.canvas);
+            var obj = util.getObjectById(args.uid, whiteboardApp.canvas);
             var recvdObj = args.object;
-            canvasObj.updateProperties(obj, recvdObj);
+            whiteboardApp.canvas.updateProperties(obj, recvdObj);
         }
     },
 
@@ -48,7 +48,7 @@ var shapes = {
             });
             circle.name = "circle";
             circle.uid = args.uid;
-            canvasObj.canvas.add(circle);
+            whiteboardApp.canvas.add(circle);
         },
         defaultValues: {
             radius: 50,
@@ -60,9 +60,9 @@ var shapes = {
             storkeColor: '#f00'
         },
         modifyAction: function (args) {
-            var obj = util.getObjectById(args.uid, canvasObj.canvas);
+            var obj = util.getObjectById(args.uid, whiteboardApp.canvas);
             var recvdObj = args.object;
-            canvasObj.updateProperties(obj, recvdObj);
+            whiteboardApp.canvas.updateProperties(obj, recvdObj);
             obj.radius = recvdObj.width / 2;
         }
     },
@@ -81,7 +81,7 @@ var shapes = {
             });
             triangle.name = "triangle";
             triangle.uid = args.uid;
-            canvasObj.canvas.add(triangle);
+            whiteboardApp.canvas.add(triangle);
         },
         defaultValues: {
             top: 100,
@@ -92,9 +92,9 @@ var shapes = {
             storkeColor: '#000'
         },
         modifyAction: function (args) {
-            var obj = util.getObjectById(args.uid, canvasObj.canvas);
+            var obj = util.getObjectById(args.uid, whiteboardApp.canvas);
             var recvdObj = args.object;
-            canvasObj.updateProperties(obj, recvdObj);
+            whiteboardApp.canvas.updateProperties(obj, recvdObj);
         }
     },
     line: {
@@ -111,7 +111,7 @@ var shapes = {
             });
             _line.name = "line";
             _line.uid = args.uid;
-            canvasObj.canvas.add(_line);
+            whiteboardApp.canvas.add(_line);
         },
         defaultValues: {
             top: 200,
@@ -123,9 +123,9 @@ var shapes = {
             strokeWidth: 3
         },
         modifyAction: function (args) {
-            var obj = util.getObjectById(args.uid, canvasObj.canvas);
+            var obj = util.getObjectById(args.uid, whiteboardApp.canvas);
             var recvdObj = args.object;
-            canvasObj.updateProperties(obj, recvdObj);
+            whiteboardApp.canvas.updateProperties(obj, recvdObj);
         }
     },
 
@@ -144,7 +144,7 @@ var shapes = {
             });
             _arc.name = "arc";
             _arc.uid = args.uid;
-            canvasObj.canvas.add(_arc);
+            whiteboardApp.canvas.add(_arc);
         },
         defaultValues: {
             width: 200,
@@ -155,9 +155,9 @@ var shapes = {
             left: 150
         },
         modifyAction: function (args) {
-            var obj = util.getObjectById(args.uid, canvasObj.canvas);
+            var obj = util.getObjectById(args.uid, whiteboardApp.canvas);
             var recvdObj = args.object;
-            canvasObj.updateProperties(obj, recvdObj);
+            whiteboardApp.canvas.updateProperties(obj, recvdObj);
         }
 
     },
@@ -179,7 +179,7 @@ var shapes = {
                 top: args.top,
                 left: args.left
             });
-            canvasObj.canvas.add(_arrow);
+            whiteboardApp.canvas.add(_arrow);
         },
         defaultValues: {
             storkeColor: '#cccccc',
@@ -188,9 +188,9 @@ var shapes = {
             left: 150
         },
         modifyAction: function (args) {
-            var obj = util.getObjectById(args.uid, canvasObj.canvas);
+            var obj = util.getObjectById(args.uid, whiteboardApp.canvas);
             var recvdObj = args.object;
-            canvasObj.updateProperties(obj, recvdObj);
+            whiteboardApp.canvas.updateProperties(obj, recvdObj);
         }
     },
 
@@ -211,8 +211,8 @@ var shapes = {
                 top: args.top,
                 left: args.left
             });
-            canvasObj.canvas.add(_arrow);
-            canvasObj.canvas.renderAll();
+            whiteboardApp.canvas.add(_arrow);
+            whiteboardApp.canvas.renderAll();
         },
         defaultValues: {
             storkeColor: '#cccccc',
@@ -221,10 +221,9 @@ var shapes = {
             left: 150
         },
         modifyAction: function (args) {
-            var obj = util.getObjectById(args.uid, canvasObj.canvas);
+            var obj = util.getObjectById(args.uid, whiteboardApp.canvas);
             var recvdObj = args.object;
-            canvasObj.updateProperties(obj, recvdObj);
+            whiteboardApp.canvas.updateProperties(obj, recvdObj);
         }
-    },
-
-}
+    }
+};
