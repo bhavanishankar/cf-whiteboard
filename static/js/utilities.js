@@ -56,7 +56,7 @@ var util = {
     getUniqId: function () {
         var newDate = new Date();
         return this.randomString() + newDate.getTime();
-    },
+    }
 
-}
+};
 //util.centerSpinner();
