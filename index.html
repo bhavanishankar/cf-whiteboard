@@ -17,6 +17,8 @@
       <link href="static/css/thirdparty/bootstrap/bootstrap.min.css" rel="stylesheet" />
       <link rel="stylesheet" type="text/css" href="static/css/thirdparty/freeow/freeow.css" />
       <link rel="stylesheet" type="text/css" href="static/css/styles.css" />
+       <link rel="stylesheet" type="text/css" href="static/css/toolbar.css" />
+       <link rel="stylesheet" type="text/css" href="static/css/chat.css" />
    </head>
    <body lang="en">
       <div id="freeow" class="freeow freeow-top-right"></div>
@@ -36,23 +38,11 @@
 		</div>   
 		<div class="whiteboard-container">
 
-            <div class="tool-bar-holder"></div>
-			<div class="canvas-div">
-				<div class="canvas-bg">
-					<canvas id="canvas_area" width="850" height="500">This text is displayed if your browser 
-                  does not support HTML5 Canvas.
-               </canvas>
-				</div>
-			</div>
-			<div id="chat-div">
-				<div class="box-title">Chat</div>
-            <div id="chat-text"></div>
-            <form id="chat-form">
-               <textarea  placeholder="Type here"></textarea>
-            </form>
-         </div>
-		</div>   
-	
+            <div id="shapesToolbar"></div>
+            <div id="canvas-holder"></div>
+            <div class="chat-div"></div>
+		</div>
+
       <!-- Links for Script files --> 
       <!-- JQuery -->    
       <script type="text/javascript" src="static/js/thirdparty/jquery/jquery-1.8.3.min.js"></script>
@@ -64,20 +54,17 @@
       <script type="text/javascript" src="static/js/thirdparty/fabric/fabric-all.js"></script>
 
       <script type="text/javascript"  src="static/js/thirdparty/jquery/jquery.freeow.min.js"></script>
-
+      <script src="static/js/main.js"></script>
       <script type="text/javascript" src="static/js/shapes.js"></script>
       <script type="text/javascript" src="static/js/utilities.js"></script>
-	  <script type="text/javascript" src="static/js/eventHandlers.js"></script>
 	  <script type="text/javascript" src="static/js/sockJSClient.js"></script>
-	  <script type="text/javascript" src="static/js/canvas.js"></script>
-	  <script type="text/javascript" src="static/js/toolBar.js"></script>
-	  <script type="text/javascript" src="static/js/chat.js"></script>
-      <script type="text/javascript" src="static/js/jquery.ui.toolbar.js"></script>
-	  <script src="static/js/main.js"></script>
 
+      <script type="text/javascript" src="static/js/jquery.ui.toolbar.js"></script>
+      <script type="text/javascript" src="static/js/jquery.ui.chatwindow.js"></script>
+      <script type="text/javascript" src="static/js/jquery.ui.canvas.js"></script>
       <script>
          $(document).ready(function() {
-	         app.init();
+	         whiteboardApp.init();
          })
       </script>
    </body>
