@@ -62,13 +62,16 @@
                     objectsInGroup.forEach(function (object) {
                         if(object.name === 'line') object.scaleY = 1;
                         /* call notify server method */
+                        self._trigger("shapeModified", null, object);
                         //whiteboardApp.sockJS.send(whiteboardApp.getModifiedShapeJSON(object, "modified"));
                     });
                     return;
                 }
                 var obj = e.target;
                 if(obj.name === 'line') obj.scaleY = 1;
+
                 /* call notify server method */
+                self._trigger("shapeModified", null, obj);
                 //whiteboardApp.sockJS.send(whiteboardApp.getModifiedShapeJSON(obj, "modified"));
             })
         }, //end of addObservers
@@ -120,7 +123,8 @@
         modifyObject: function (data) {
             var obj = this.getObjectById(data.args[0].uid);
             if (obj) {
-                //whiteboardApp.shapes[data.name].modifyAction.apply(this, data.args);
+
+                this._trigger('applyModify', null, data)
                 this.canvas.setActiveObject(obj);
                 obj.setCoords(); // without this object selection pointers remain at orginal postion(beofore modified)
             }
@@ -152,7 +156,7 @@
                 }
                 activeObject.setCoords();
                 canvas.renderAll();
-                //whiteboardApp.sockJS.send(whiteboardApp.getModifiedShapeJSON(activeObject));
+                this._trigger("shapeModified", null, activeObject);
             } else {
                 canvas.discardActiveGroup();
             }
@@ -164,13 +168,13 @@
                 activeGroup = this.canvas.getActiveGroup();
             if (activeObject) {
                 this.canvas.remove(activeObject);
-                //whiteboardApp.sockJS.send(whiteboardApp.getModifiedShapeJSON(activeObject, "deleted"));
+                self._trigger('shapeDeleted', null, activeObject);
             } else if (activeGroup) {
                 var objectsInGroup = activeGroup.getObjects();
                 this.canvas.discardActiveGroup();
                 objectsInGroup.forEach(function (object) {
                     self.canvas.remove(object);
-                    //whiteboardApp.sockJS.send(whiteboardApp.getModifiedShapeJSON(object, "deleted"));
+                    self._trigger('shapeDeleted', null, object);
                 });
             }
         },
