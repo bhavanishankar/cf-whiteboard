@@ -1,0 +1,45 @@
+
+
+.ui-chatwindow {
+    width: 200px;
+    float: right;
+    border: 1px solid #ccc;
+    height: 100%;
+    margin-right: 5px;
+    background-color:  #FAFAFA
+}
+
+.ui-chatwindow  .box-title {
+    height: 20px;
+    color: #fff;
+    background-color: #0088CC;
+    padding-left: 15px;
+}
+
+.ui-chatwindow textarea {
+    width:93%;
+    border: 1px solid #ccc;
+    resize: none;
+    height: 26px;
+}
+.ui-chatwindow .chat-text {
+    padding: 0px 5px 0px 5px;
+    overflow-y: auto;
+}
+
+.ui-chatwindow .ui-toolbar {
+    float: left;
+    width: 64px;
+    height: 100%;
+    margin: 0px 10px 0px 1px;
+    border: 1px solid #ccc;
+    background-color:  #FAFAFA;
+}
+
+ui-chatwindow .ui-toolbar .box-title {
+    height: 20px;
+    color: #fff;
+    background-color: #0088CC;
+    padding-left:7px;
+}
+
