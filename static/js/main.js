@@ -23,25 +23,23 @@ var whiteboardApp = {
         sockJSClient.init();
         $(document).bind('keydown', this.onKeyDown);
         $(window).resize(whiteboardApp.resize);
+        this.resize();
     },
 
     initToolbar: function () {
         var tb = $("#shapesToolbar").toolbar(
             {
                 shapes:whiteboardApp.shapes, // shapes object with shape 'name' and 'iconname' ex: shapes = {  rectangle: {  name: 'rectangle', imagesPath:'/static/images/' } }
-                dropTarget:$('.canvas-div'),
+                dropTarget:$('.ui-canvas'),
                 title:'Shapes',
                 shapeSelected:this.onShapeSelect,  // callback
                 dropTargetClicked:this.onClickDropTarget   //callback
             }
         );
-        /* syntax for calling public method */
-        /* $(".tool-bar-holder").data('toolbar').publicMethod();*/
-
     },
 
     initChatWindow: function() {
-        whiteboardApp.chat = $(".chat-div").chatwindow(
+        whiteboardApp.chatWidget = $(".chat-div").chatwindow(
             {
                 title: "Chat",
                 textSubmitted:this.onTextSubmit
@@ -49,7 +47,7 @@ var whiteboardApp = {
     },
 
     initCanvas:function() {
-        whiteboardApp.canvasWidget = $("#canvas-holder").canvas(
+        whiteboardApp.canvasWidgetInstance = $("#canvas-holder").canvas(
             {
                 title: "Canvas",
                 fabric: fabric,
@@ -57,7 +55,10 @@ var whiteboardApp = {
                 applyModify: this.onApplyModify,
                 shapeDeleted: this.onShapeDelete
             } );
-        whiteboardApp.canvas = whiteboardApp.canvasWidget.data('canvas').getCanvasInstance();
+
+        whiteboardApp.canvas = whiteboardApp.canvasWidgetInstance.canvas("getCanvasInstance");
+       // whiteboardApp.canvasWidget = whiteboardApp.canvasWidgetInstance.canvas;
+        //whiteboardApp.canvas = whiteboardApp.canvasWidget.data('canvas').getCanvasInstance();
     },
 
     onApplyModify: function(event, data) {
@@ -72,9 +73,9 @@ var whiteboardApp = {
 
     onClickDropTarget:function(event) {
         if (whiteboardApp.shapeSelected) {
-            var scrollLeft = $('.canvas-bg').scrollLeft(),
-                mouseX = event.pageX - $('.canvas-div').offset().left + scrollLeft, // offset X
-                mouseY = event.pageY - $('.canvas-div').offset().top; // offset Y
+            var scrollLeft = $('.ui-canvas').scrollLeft(),
+                mouseX = event.pageX - $('.ui-canvas').offset().left + scrollLeft, // offset X
+                mouseY = event.pageY - $('.ui-canvas').offset().top; // offset Y
             whiteboardApp.notifyNewShapeEvent({
                 x: mouseX,
                 y: mouseY
@@ -84,20 +85,26 @@ var whiteboardApp = {
     },
 
     onTextSubmit: function (event) {
-        whiteboardApp.chat.data('chatwindow').displayMessage('<b>[ ' + whiteboardApp.userName + ' ]:</b> ', $(event.currentTarget).val());
-        whiteboardApp.sockJS.send(JSON.stringify({
-            action: 'text',
-            message: $(event.currentTarget).val(),
-            userName: whiteboardApp.userName
-        }));
-        $(event.currentTarget).val('');
-        $(event.currentTarget).focus();
+        var tar = $(event.currentTarget),
+            data = {
+                userName: whiteboardApp.userName,
+                message: tar.val(),
+                action: 'text'
+            };
+
+        whiteboardApp.textMessage(data);
+
+        whiteboardApp.sockJS.send(JSON.stringify(data));
+
+        tar.val('').focus();
+
         return false;
     },
 
     createNewShape: function (data) {
         var args = [],
             argsObj = whiteboardApp.shapes[data.shape].defaultValues;
+
         argsObj.left = data.positionObj.x;
         argsObj.top = data.positionObj.y;
         argsObj.uid = data.args[0].uid;
@@ -107,7 +114,9 @@ var whiteboardApp = {
     },
 
     textMessage: function (data) {
-        whiteboardApp.chat.data('chatwindow').displayMessage('<b>[ ' + data.userName + ' ]:</b> ', data.message);
+        var _userName = (data.userName === undefined) ? "user *"  : data.userName;
+        var userNameString  = "<b>[ " + _userName + " ]:</b>"
+        whiteboardApp.chatWidget.chatwindow('displayMessage' , userNameString, data.message);
     },
 
     notifyNewShapeEvent: function (posObj) {
@@ -165,21 +174,30 @@ var whiteboardApp = {
         if (evt) {
             var key = (evt.charCode) ? evt.charCode : ((evt.keyCode) ? evt.keyCode : ((evt.which) ? evt.which : 0));
             if (key === 46) { //  DELETE
-                whiteboardApp.canvasWidget.data('canvas').onDeletePress();
-            } else if (key === 37) {
+                whiteboardApp.canvasWidgetInstance.canvas("onDeletePress");
+              } else if (key === 37) {
                 //left arrow
-                whiteboardApp.canvasWidget.data('canvas').moveObject('left');
+                whiteboardApp.canvasWidgetInstance.canvas("moveObject", 'left');
             } else if (key === 38) {
                 // up arrow
-                whiteboardApp.canvasWidget.data('canvas').moveObject('up');
+                whiteboardApp.canvasWidgetInstance.canvas("moveObject", 'up');
             } else if (key === 39) {
                 // right arrow
-                whiteboardApp.canvasWidget.data('canvas').moveObject('right');
+                whiteboardApp.canvasWidgetInstance.canvas("moveObject", 'right');
             } else if (key === 40) {
                 // down arrow
-                whiteboardApp.canvasWidget.data('canvas').moveObject('down');
+                whiteboardApp.canvasWidgetInstance.canvas("moveObject", 'down');
             }
         }
+    },
+
+    resize: function () {
+        var docWidth = $(window).width(),
+            chatDivWidth = $('.chat-div').outerWidth(),
+            toolBarWidth = $('.ui-toolbar').outerWidth();
+        $('.ui-canvas').width(docWidth - ( chatDivWidth + toolBarWidth ) - toolBarWidth/2);
+        whiteboardApp.canvas.renderAll();
+        whiteboardApp.canvasWidgetInstance.canvas('setCanvasDimensions');
     }
 
 }; //end of app
