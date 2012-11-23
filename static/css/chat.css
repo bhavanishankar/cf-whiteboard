@@ -6,7 +6,8 @@
     border: 1px solid #ccc;
     height: 100%;
     margin-right: 5px;
-    background-color:  #FAFAFA
+    background-color:  #FAFAFA;
+    position: relative;
 }
 
 .ui-chatwindow  .box-title {
@@ -17,14 +18,33 @@
 }
 
 .ui-chatwindow textarea {
-    width:93%;
+    width: 100%;
     border: 1px solid #ccc;
     resize: none;
-    height: 26px;
+    height: 35px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+
+    bottom: -10px;
+    position: absolute;
 }
+
 .ui-chatwindow .chat-text {
-    padding: 0px 5px 0px 5px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+
+    width: 100%;
+    top: 20px;
+    bottom: 25px;
+
+    padding: 0 5px;
+
     overflow-y: auto;
+    position: absolute;
+}
+
+.ui-chatwindow .chat-text .message{
+    display: block;
 }
 
 .ui-chatwindow .ui-toolbar {
