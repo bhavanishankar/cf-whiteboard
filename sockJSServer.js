@@ -24,7 +24,7 @@ var sockJSServer = {
 
         /*Is triggered when a new user joins in*/
         function onSockJSConnection(conn) {
-            /*Add him to the clients list*/
+             /*Add him to the clients list*/
             clients[conn.id] = conn;
             for (var index in clientData) {
                 if (clientData.hasOwnProperty(index)) {
@@ -46,33 +46,50 @@ var sockJSServer = {
             /*Listen for data events on this client*/
             conn.on('data', function (data) {
                 onDataHandler(data, conn.id);
-                /* Push the data received from client*/
-                var dataObj = JSON.parse(data);
-                if (dataObj.action !== 'text') {
-                    var shapeId = dataObj.args[0].uid;
-                    switch (dataObj.action) {
-                        case 'new_shape':
-                            clientData[shapeId] = dataObj;
-                            break;
-                        case 'modified':
-                            if (clientData[shapeId] !== undefined && clientData[shapeId].modify === undefined) {
-                                clientData[shapeId].modify = {};
-                            }
-                            clientData[shapeId].modify[shapeId] = dataObj;
-                            break;
-                        case 'deleted':
-                            delete clientData[shapeId];
-                            break;
-
-                    }
-                } else {
-                    if (clientData.textObj === undefined) {
-                        clientData.textObj = [];
-                    }
-                    clientData.textObj.push(dataObj);
-                }
-
+                pushUserData(data);
             });
+
+            conn.on('close', function (data) {
+                delete clients[conn.id];
+                onDataHandler(JSON.stringify({userName: conn.userName, action:'text', message: 'User left'}), conn.id);
+            });
+
+        }
+
+        function pushUserData(data) {
+            /* Push the data received from client*/
+            var dataObj = JSON.parse(data);
+            if (dataObj.action !== 'text') {
+                pushShapesData(dataObj);
+            } else {
+                pushChatData(dataObj);
+            }
+
+        }
+
+        function pushChatData(dataObj)  {
+            if (clientData.textObj === undefined) {
+                clientData.textObj = [];
+            }
+            clientData.textObj.push(dataObj);
+        }
+
+        function pushShapesData(dataObj) {
+            var shapeId = dataObj.args[0].uid;
+            switch (dataObj.action) {
+                case 'new_shape':
+                    clientData[shapeId] = dataObj;
+                    break;
+                case 'modified':
+                    if (clientData[shapeId] !== undefined && clientData[shapeId].modify === undefined) {
+                        clientData[shapeId].modify = {};
+                    }
+                    clientData[shapeId].modify[shapeId] = dataObj;
+                    break;
+                case 'deleted':
+                    delete clientData[shapeId];
+                    break;
+            }
         }
 
         /* Handling data received from client to broadcast */
@@ -95,4 +112,5 @@ var sockJSServer = {
         }
     }
 };
+
 module.exports = sockJSServer;
