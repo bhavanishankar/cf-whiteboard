@@ -15,7 +15,7 @@
             var self = this,
                 _options = self.options,
                 _element = self.element,
-                _canvasArea = $('<canvas>').attr('id', 'canvas_area')
+                _canvasArea = $('<canvas>').attr('id', 'canvas-area')
                                         .width(_options.canvasWidth)
                                         .height(_options.canvasHeight);
 
@@ -27,28 +27,28 @@
         },
 
         initFabricCanvas: function(_fabric) {
-            this.canvas = new _fabric.Canvas('canvas_area');
+            this.fabricCanvas = new _fabric.Canvas('canvas-area');
             this.setCanvasDimensions();
             this.addObservers();
         },
 
         getCanvasInstance:function() {
-             return this.canvas;
+             return this.fabricCanvas;
         },
 
         setCanvasDimensions: function () {
             /* Need to set canvas dimensions when window is resized */
-            this.canvas.setDimensions({
+            this.fabricCanvas.setDimensions({
                 width: this.canvasWidth,
                 height: this.canvasHeight
             });
         },
         addObservers: function () {
             var self = this;
-            this.canvas.observe('object:modified', function (e) {
-                var activeGroup = self.canvas.getActiveGroup();
+            this.fabricCanvas.observe('object:modified', function (e) {
+                var activeGroup = self.fabricCanvas.getActiveGroup();
                 if (activeGroup) {
-                    self.canvas.discardActiveGroup();
+                    self.fabricCanvas.discardActiveGroup();
                     var objectsInGroup = activeGroup.getObjects();
                     objectsInGroup.forEach(function (object) {
                         if(object.name === 'line') object.scaleY = 1;
@@ -68,15 +68,15 @@
         }, //end of addObservers
 
         deleteObject: function(data) {
-            var obj = this.getObjectById(data.args[0].uid, this.canvas);
+            var obj = this.getObjectById(data.args[0].uid, this.fabricCanvas);
             if (obj) {
-                this.canvas.remove(obj);
+                this.fabricCanvas.remove(obj);
             }
         },
 
         getObjectById: function (id) {
             var obj;
-            var objs = this.canvas.getObjects();
+            var objs = this.fabricCanvas.getObjects();
             objs.forEach(function (object) {
                 if (object.uid === id) {
                     obj = object;
@@ -102,14 +102,14 @@
             if (obj) {
 
                 this._trigger('applyModify', null, data)
-                this.canvas.setActiveObject(obj);
+                this.fabricCanvas.setActiveObject(obj);
                 obj.setCoords(); // without this object selection pointers remain at orginal postion(beofore modified)
             }
-            this.canvas.renderAll();
+            this.fabricCanvas.renderAll();
         },
 
         moveObject: function (direction) {
-            var canvas = this.canvas,
+            var canvas = this.fabricCanvas,
                 activeObject = canvas.getActiveObject(),
                 left, top;
 
@@ -146,15 +146,15 @@
 
         onDeletePress: function () {
             var self = this,
-                activeObject = self.canvas.getActiveObject(),
+                activeObject = self.fabricCanvas.getActiveObject(),
                 activeGroup, objectsInGroup;
 
             if (activeObject) {
                 self._removeShape(activeObject);
             } else if (activeGroup) {
-                activeGroup = self.canvas.getActiveGroup();
+                activeGroup = self.fabricCanvas.getActiveGroup();
                 objectsInGroup = activeGroup.getObjects();
-                self.canvas.discardActiveGroup();
+                self.fabricCanvas.discardActiveGroup();
 
                 objectsInGroup.forEach(function (object) {
                     self._removeShape(object);
@@ -163,7 +163,7 @@
         },
 
         _removeShape: function(object){
-            this.canvas.remove(object);
+            this.fabricCanvas.remove(object);
             this._trigger('shapeDeleted', null, object);
         },
 
