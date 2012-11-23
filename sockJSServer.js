@@ -26,23 +26,11 @@ var sockJSServer = {
         function onSockJSConnection(conn) {
              /*Add him to the clients list*/
             clients[conn.id] = conn;
-            for (var index in clientData) {
-                if (clientData.hasOwnProperty(index)) {
-                    if (clientData[index].action === 'new_shape') {
-                        conn.write(JSON.stringify(clientData[index]));
-                    }
-                    if (clientData[index].modify) {
-                        for (var action in clientData[index].modify) {
-                            conn.write(JSON.stringify(clientData[index].modify[action]));
-                        }
-                    }
-                    if (clientData.textObj) {
-                        for (var action in clientData.textObj) {
-                            conn.write(JSON.stringify(clientData.textObj[action]));
-                        }
-                    }
-                }
-            }
+
+            /* Send new user all the previous data to update his whitebaord */
+            sendShapeActionsToClient(conn, clientData);
+            sendChatDataToClient(conn, clientData);
+
             /*Listen for data events on this client*/
             conn.on('data', function (data) {
                 onDataHandler(data, conn.id);
@@ -51,9 +39,33 @@ var sockJSServer = {
 
             conn.on('close', function (data) {
                 delete clients[conn.id];
-                onDataHandler(JSON.stringify({userName: conn.userName, action:'text', message: 'User left'}), conn.id);
+                onDataHandler(JSON.stringify({userName: conn.userName, action:'text', message: 'left'}), conn.id);
             });
 
+        }
+
+        function sendShapeActionsToClient(connection, shapesData) {
+            for (var index in shapesData) {
+                if (shapesData.hasOwnProperty(index)) {
+                    if (shapesData[index].action === 'new_shape') {
+                        connection.write(JSON.stringify(shapesData[index]));
+                    }
+                    if (shapesData[index].modify) {
+                        for (var action in shapesData[index].modify) {
+                            connection.write(JSON.stringify(shapesData[index].modify[action]));
+                        }
+                    }
+
+                }
+            }
+        }
+
+        function sendChatDataToClient(connection, chatData) {
+            if (chatData.textObj) {
+                for (var action in chatData.textObj) {
+                    connection.write(JSON.stringify(chatData.textObj[action]));
+                }
+            }
         }
 
         function pushUserData(data) {
