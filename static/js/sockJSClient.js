@@ -7,11 +7,10 @@ var sockJSClient = {
         whiteboardApp.sockJS.onclose = this.onSocketClose;
     },
 
-    onSocketOpen: function () {
+    onSocketOpen: function (conn) {
         $('#spinner').hide();
         $('#wait').hide();
-       // chat.displayMessage('[*] open', whiteboardApp.sockJS.protocol);
-        whiteboardApp.chat.data('chatwindow').displayMessage('<b>[*] opened :</b> ', whiteboardApp.sockJS.protocol);
+        whiteboardApp.chatWidget.chatwindow('displayMessage' ," <b>[ Opened ]:</b>  ", whiteboardApp.sockJS.protocol);
         whiteboardApp.sockJS.send(JSON.stringify({
             action: 'text',
             message: 'Joined',
@@ -29,21 +28,20 @@ var sockJSClient = {
                 whiteboardApp.createNewShape(data);
             break;
             case 'modified':
-                whiteboardApp.canvasWidget.data('canvas').modifyObject(data);
+                whiteboardApp.canvasWidgetInstance.canvas('modifyObject', data);
             break;
             case 'deleted':
-                whiteboardApp.canvasWidget.data('canvas').deleteObject(data);
-            break;    
+                whiteboardApp.canvasWidgetInstance.canvas('deleteObject', data);
+            break;
         }
     },
 
-    onSocketClose: function () {
-        whiteboardApp.chat.data('chatwindow').displayMessage('<b>[ [*] closed ]:</b> ');
+    onSocketClose: function (conn) {
+        whiteboardApp.chatWidget.chatwindow('displayMessage' ," <b>[ closed ]</b>", "");
         whiteboardApp.sockJS.send(JSON.stringify({
             action: 'text',
             message: 'Left',
             userName: whiteboardApp.userName
         }));
     }
-
 };
