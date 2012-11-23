@@ -31,7 +31,7 @@ whiteboardApp.shapes = {
         modifyAction: function (args) {
             var obj = util.getObjectById(args.uid, whiteboardApp.canvas);
             var recvdObj = args.object;
-            whiteboardApp.canvasWidget.data('canvas').updateProperties(obj, recvdObj);
+            whiteboardApp.canvasWidgetInstance.canvas('updateProperties', obj, recvdObj);
         }
     },
 
@@ -62,7 +62,7 @@ whiteboardApp.shapes = {
         modifyAction: function (args) {
             var obj = util.getObjectById(args.uid, whiteboardApp.canvas);
             var recvdObj = args.object;
-            whiteboardApp.canvasWidget.data('canvas').updateProperties(obj, recvdObj);
+            whiteboardApp.canvasWidgetInstance.canvas('updateProperties', obj, recvdObj);
             obj.radius = recvdObj.width / 2;
         }
     },
@@ -94,7 +94,7 @@ whiteboardApp.shapes = {
         modifyAction: function (args) {
             var obj = util.getObjectById(args.uid, whiteboardApp.canvas);
             var recvdObj = args.object;
-            whiteboardApp.canvasWidget.data('canvas').updateProperties(obj, recvdObj);
+            whiteboardApp.canvasWidgetInstance.canvas('updateProperties', obj, recvdObj);
         }
     },
     line: {
@@ -125,7 +125,7 @@ whiteboardApp.shapes = {
         modifyAction: function (args) {
             var obj = util.getObjectById(args.uid, whiteboardApp.canvas);
             var recvdObj = args.object;
-            whiteboardApp.canvasWidget.data('canvas').updateProperties(obj, recvdObj);
+            whiteboardApp.canvasWidgetInstance.canvas('updateProperties', obj, recvdObj);
         }
     },
 
@@ -157,7 +157,7 @@ whiteboardApp.shapes = {
         modifyAction: function (args) {
             var obj = util.getObjectById(args.uid, whiteboardApp.canvas);
             var recvdObj = args.object;
-            whiteboardApp.canvasWidget.data('canvas').updateProperties(obj, recvdObj);
+            whiteboardApp.canvasWidgetInstance.canvas('updateProperties', obj, recvdObj);
         }
 
     },
@@ -190,7 +190,7 @@ whiteboardApp.shapes = {
         modifyAction: function (args) {
             var obj = util.getObjectById(args.uid, whiteboardApp.canvas);
             var recvdObj = args.object;
-            whiteboardApp.canvasWidget.data('canvas').updateProperties(obj, recvdObj);
+            whiteboardApp.canvasWidgetInstance.canvas('updateProperties', obj, recvdObj);
         }
     },
 
@@ -223,7 +223,7 @@ whiteboardApp.shapes = {
         modifyAction: function (args) {
             var obj = util.getObjectById(args.uid, whiteboardApp.canvas);
             var recvdObj = args.object;
-            whiteboardApp.canvasWidget.data('canvas').updateProperties(obj, recvdObj);
+            whiteboardApp.canvasWidget.updateProperties(obj, recvdObj);
         }
     }
 };
