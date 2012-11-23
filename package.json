@@ -1,9 +1,9 @@
 {
-        "name": "sockjs-sample",
-        "version": "0.0.0-unreleasable",
+        "name": "nodejs-whiteboard",
+        "version": "0.0.1",
         "dependencies": {
              "sockjs": "*",
-	     		  "express":"*"
+	     	 "express":"*"
 		 
         }
 
