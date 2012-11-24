@@ -43,9 +43,9 @@
             this._chatTextDiv.append(messageEle);
         },
 
-        /*TODO need to update with correct statements*/
-        destroy:function () {
+         destroy:function () {
             this.element.removeClass('ui-chatwindow')
+                .empty()
                 .remove();
         },
 

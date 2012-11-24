@@ -54,7 +54,6 @@
                         if(object.name === 'line') object.scaleY = 1;
                         /* call notify server method */
                         self._trigger("shapeModified", null, object);
-                        //whiteboardApp.sockJS.send(whiteboardApp.getModifiedShapeJSON(object, "modified"));
                     });
                     return;
                 }
@@ -63,7 +62,6 @@
 
                 /* call notify server method */
                 self._trigger("shapeModified", null, obj);
-                //whiteboardApp.sockJS.send(whiteboardApp.getModifiedShapeJSON(obj, "modified"));
             });
         }, //end of addObservers
 
@@ -169,7 +167,7 @@
 
         /*TODO need to update with correct statements*/
         destroy:function () {
-            this.element.removeClass('ui-toolbar')
+            this.element.removeClass('ui-canvas')
                 .remove();
         }
     });

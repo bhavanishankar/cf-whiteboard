@@ -20,7 +20,7 @@
 
             self._addShapes(_element, _options.shapes);
 
-            $('.shape').on('click', function (event) {
+            $('.ui-toolbar .shape').on('click', function (event) {
                 self._onShapeClicked(event);
             });
 
@@ -61,9 +61,9 @@
             }
         },
 
-        /*TODO need to update with correct statements*/
         destroy:function () {
             this.element.removeClass('ui-toolbar')
+                .empty()
                 .remove();
         },
 
