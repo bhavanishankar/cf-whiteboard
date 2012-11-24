@@ -5,25 +5,35 @@
  * Node.js and  Node Package Manager (NPM) for server side - JavaScript environment that uses an asynchronous event-driven model.
  */
 var whiteboardApp = {
-    sockJS: null,
     chatDivElement: null,
     chatInputElement: null,
     currentIcon: null,
     userName: 'Guest',
 
     init: function () {
-        /* Prevent from closing SockJS connection when ESC key is pressed*/
-        window.addEventListener('keydown', function(e) { (e.keyCode === 27 && e.preventDefault()) })
-        $('#wait').hide();
-        $('#spinner').show().center($('.canvas-div'));
+        this.handleEscKeyPress();
+        this.showSpinner();
         this.initCanvas();
         this.initToolbar();
         this.initChatWindow();
         this.initShowPrompt();
-        sockJSClient.init();
+        this.sockJSClient.init();
+        this.initEventListeners();
+        this.resize();
+    },
+
+    showSpinner:function() {
+        $('#spinner').show().center($(window));
+    },
+
+    initEventListeners:function() {
         $(document).bind('keydown', this.onKeyDown);
         $(window).resize(whiteboardApp.resize);
-        this.resize();
+    },
+
+    handleEscKeyPress: function() {
+        /* Prevent from closing SockJS connection when ESC key is pressed*/
+        window.addEventListener('keydown', function(e) { (e.keyCode === 27 && e.preventDefault()) })
     },
 
     initToolbar: function () {
@@ -57,8 +67,6 @@ var whiteboardApp = {
             } );
 
         whiteboardApp.canvas = whiteboardApp.canvasWidgetInstance.canvas("getCanvasInstance");
-       // whiteboardApp.canvasWidget = whiteboardApp.canvasWidgetInstance.canvas;
-        //whiteboardApp.canvas = whiteboardApp.canvasWidget.data('canvas').getCanvasInstance();
     },
 
     onApplyModify: function(event, data) {
@@ -85,18 +93,18 @@ var whiteboardApp = {
     },
 
     onTextSubmit: function (event) {
-        var tar = $(event.currentTarget),
+        var target = $(event.currentTarget),
             data = {
                 userName: whiteboardApp.userName,
-                message: tar.val(),
+                message: target.val(),
                 action: 'text'
             };
 
-        whiteboardApp.textMessage(data);
+        whiteboardApp.showTextMessage(data);
 
-        whiteboardApp.sockJS.send(JSON.stringify(data));
+        whiteboardApp.sockJSClient.sockJS.send(JSON.stringify(data));
 
-        tar.val('').focus();
+        target.val('').focus();
 
         return false;
     },
@@ -113,7 +121,7 @@ var whiteboardApp = {
         $("#freeow").hide();
     },
 
-    textMessage: function (data) {
+    showTextMessage: function (data) {
         var _userName = (data.userName === undefined) ? "user *"  : data.userName;
         var userNameString  = "<b>[ " + _userName + " ]:</b>"
         whiteboardApp.chatWidget.chatwindow('displayMessage' , userNameString, data.message);
@@ -122,7 +130,7 @@ var whiteboardApp = {
     notifyNewShapeEvent: function (posObj) {
         var uniqId = util.getUniqId(),
             _data = {};
-        whiteboardApp.sockJS.send(JSON.stringify({
+        whiteboardApp.sockJSClient.sockJS.send(JSON.stringify({
             action: 'new_shape',
             positionObj: posObj,
             shape: whiteboardApp.shapeToDraw,
@@ -139,11 +147,11 @@ var whiteboardApp = {
     },
 
     onShapeModify:function(event, data) {
-        whiteboardApp.sockJS.send(whiteboardApp.getModifiedShapeJSON(data, "modified"));
+        whiteboardApp.sockJSClient.sockJS.send(whiteboardApp.getModifiedShapeJSON(data, "modified"));
     },
 
     onShapeDelete:function(event, data) {
-        whiteboardApp.sockJS.send(whiteboardApp.getModifiedShapeJSON(data, "deleted"));
+        whiteboardApp.sockJSClient.sockJS.send(whiteboardApp.getModifiedShapeJSON(data, "deleted"));
     },
 
     getModifiedShapeJSON: function (shape, _action) {
