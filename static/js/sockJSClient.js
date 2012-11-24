@@ -1,17 +1,17 @@
-var sockJSClient = {
+whiteboardApp.sockJSClient = {
     sockjs_url: '/echo',
     init: function () {
-        whiteboardApp.sockJS = new SockJS(this.sockjs_url);
-        whiteboardApp.sockJS.onopen = this.onSocketOpen;
-        whiteboardApp.sockJS.onmessage = this.onSocketMessage;
-        whiteboardApp.sockJS.onclose = this.onSocketClose;
+        this.sockJS = new SockJS(this.sockjs_url);
+        this.sockJS.onopen = this.onSocketOpen;
+        this.sockJS.onmessage = this.onSocketMessage;
+        this.sockJS.onclose = this.onSocketClose;
     },
 
     onSocketOpen: function (conn) {
         $('#spinner').hide();
         $('#wait').hide();
-        whiteboardApp.chatWidget.chatwindow('displayMessage' ," <b>[ Opened ]:</b>  ", whiteboardApp.sockJS.protocol);
-        whiteboardApp.sockJS.send(JSON.stringify({
+        whiteboardApp.chatWidget.chatwindow('displayMessage' ," <b>[ Opened ]:</b>  ", whiteboardApp.sockJSClient.sockJS.protocol);
+        whiteboardApp.sockJSClient.sockJS.send(JSON.stringify({
             action: 'text',
             message: 'Joined',
             userName: whiteboardApp.userName
@@ -22,7 +22,7 @@ var sockJSClient = {
         var data = JSON.parse(e.data);
         switch (data.action) {
             case 'text':
-                whiteboardApp.textMessage(data);
+                whiteboardApp.showTextMessage(data);
             break;
             case 'new_shape':
                 whiteboardApp.createNewShape(data);
@@ -38,7 +38,7 @@ var sockJSClient = {
 
     onSocketClose: function (conn) {
         whiteboardApp.chatWidget.chatwindow('displayMessage' ," <b>[ closed ]</b>", "");
-        whiteboardApp.sockJS.send(JSON.stringify({
+        whiteboardApp.sockJSClient.sockJS.send(JSON.stringify({
             action: 'text',
             message: 'Left',
             userName: whiteboardApp.userName
